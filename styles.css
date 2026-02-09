@@ -331,6 +331,24 @@ button{ font: inherit; }
   border-radius: var(--radius2);
   padding: 18px 18px;
   box-shadow: 0 18px 50px var(--shadow);
+  transform-style: preserve-3d;
+  transition: transform 200ms var(--ease), box-shadow 200ms var(--ease);
+}
+.card:hover{
+  box-shadow: 0 25px 70px var(--shadow);
+}
+.card .card__shine{
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.08), transparent 50%);
+  opacity: 0;
+  transition: opacity 300ms var(--ease);
+  z-index: 10;
+  border-radius: inherit;
+}
+.card:hover .card__shine{
+  opacity: 1;
 }
 .card--glass{
   background: color-mix(in srgb, var(--bg) 35%, transparent);
@@ -452,6 +470,23 @@ button{ font: inherit; }
   box-shadow: 0 18px 60px var(--shadow);
   position: relative;
   overflow: hidden;
+  transform-style: preserve-3d;
+  transition: transform 200ms var(--ease), box-shadow 200ms var(--ease);
+}
+.proj:hover{
+  box-shadow: 0 25px 80px var(--shadow);
+}
+.proj .proj__shine{
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.12), transparent 50%);
+  opacity: 0;
+  transition: opacity 300ms var(--ease);
+  z-index: 10;
+}
+.proj:hover .proj__shine{
+  opacity: 1;
 }
 .proj::before{
   content:"";

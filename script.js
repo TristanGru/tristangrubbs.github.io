@@ -66,3 +66,38 @@ function toggleTheme() {
 }
 
 if (themeToggle) themeToggle.addEventListener("click", toggleTheme);
+
+// Tilt effect for project cards and cards
+const tiltElements = document.querySelectorAll(".proj, .card");
+
+tiltElements.forEach((el) => {
+  // Add shine overlay element
+  const shine = document.createElement("div");
+  shine.className = el.classList.contains("proj") ? "proj__shine" : "card__shine";
+  el.style.position = "relative";
+  el.appendChild(shine);
+
+  el.addEventListener("mousemove", (e) => {
+    const rect = el.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    
+    // Calculate rotation (max 4 degrees for subtle effect)
+    const rotateX = ((y - centerY) / centerY) * -4;
+    const rotateY = ((x - centerX) / centerX) * 4;
+    
+    el.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.01)`;
+    
+    // Update shine position
+    const percentX = (x / rect.width) * 100;
+    const percentY = (y / rect.height) * 100;
+    el.style.setProperty("--mouse-x", `${percentX}%`);
+    el.style.setProperty("--mouse-y", `${percentY}%`);
+  });
+
+  el.addEventListener("mouseleave", () => {
+    el.style.transform = "perspective(1000px) rotateX(0) rotateY(0) scale(1)";
+  });
+});
