@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Games | Tristan Grubbs</title>
+  <meta name="description" content="Games by Tristan Grubbs - playable projects and experiments." />
+
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <!-- Ambient background -->
+  <div class="bg">
+    <div class="bg__blob bg__blob--a"></div>
+    <div class="bg__blob bg__blob--b"></div>
+    <div class="bg__grid"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="header" data-elevate>
+    <div class="container header__inner">
+      <a class="brand" href="index.html" aria-label="Home">
+        <span class="brand__mark" aria-hidden="true"></span>
+        <span class="brand__name">Tristan Grubbs</span>
+      </a>
+
+      <nav class="nav" aria-label="Primary">
+        <a class="nav__link" href="index.html#work">Work</a>
+        <a class="nav__link" href="index.html#projects">Projects</a>
+        <a class="nav__link" href="index.html#about">About</a>
+        <a class="nav__link" href="index.html#writing">Writing</a>
+        <a class="nav__link" href="index.html#games">Games</a>
+        <a class="nav__link" href="index.html#contact">Contact</a>
+      </nav>
+
+      <button class="btn btn--ghost header__cta" id="themeToggle" type="button" aria-label="Toggle theme">
+        <span class="btn__icon" aria-hidden="true">◐</span>
+        <span class="btn__text">Theme</span>
+      </button>
+
+      <button class="burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <div class="mobile" id="mobileNav" aria-hidden="true">
+      <div class="container mobile__inner">
+        <a class="mobile__link" href="index.html#work">Work</a>
+        <a class="mobile__link" href="index.html#projects">Projects</a>
+        <a class="mobile__link" href="index.html#about">About</a>
+        <a class="mobile__link" href="index.html#writing">Writing</a>
+        <a class="mobile__link" href="index.html#games">Games</a>
+        <a class="mobile__link" href="index.html#contact">Contact</a>
+        <div class="mobile__divider"></div>
+        <a class="mobile__link" href="index.html#contact">Get in touch →</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- GAMES HERO -->
+    <section class="hero section">
+      <div class="container">
+        <div class="section__head reveal">
+          <h1 class="h2">Games</h1>
+          <p class="lead">
+            Playable projects and experiments. Games I've built that you can try right here in your browser.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- GAMES LIST -->
+    <section class="section">
+      <div class="container">
+        <div class="grid grid--2">
+
+          <article class="card reveal">
+            <h3>Coming Soon</h3>
+            <p>New games will be added here. Check back soon for playable projects and experiments.</p>
+          </article>
+
+          <!-- 
+          TEMPLATE FOR ADDING NEW GAMES:
+          
+          <article class="proj reveal">
+            <div class="proj__top">
+              <div>
+                <h3 class="proj__title">Game Title</h3>
+                <p class="proj__desc">A short description of the game and what makes it interesting.</p>
+              </div>
+              <div class="proj__badges">
+                <span class="badge">JavaScript</span>
+                <span class="badge">Canvas</span>
+              </div>
+            </div>
+            <div class="proj__body">
+              <div class="kpis">
+                <div class="kpi">
+                  <div class="kpi__k">Genre</div>
+                  <div class="kpi__v">Puzzle / Strategy / etc.</div>
+                </div>
+                <div class="kpi">
+                  <div class="kpi__k">Players</div>
+                  <div class="kpi__v">1-2 players</div>
+                </div>
+              </div>
+              <div class="proj__links">
+                <a class="btn btn--primary" href="games/game-name.html">Play Now →</a>
+              </div>
+            </div>
+          </article>
+          -->
+
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <section class="section">
+      <div class="container">
+        <footer class="footer">
+          <div class="footer__left">
+            <span class="muted">© <span id="year"></span> Tristan Grubbs</span>
+          </div>
+          <div class="footer__right">
+            <a class="link" href="index.html">← Back to Home</a>
+          </div>
+        </footer>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
