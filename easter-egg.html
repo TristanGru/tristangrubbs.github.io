@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>You Found It | Tristan Grubbs</title>
+  <meta name="robots" content="noindex, nofollow" />
+
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .easter-egg {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 20px;
+    }
+    .easter-egg__title {
+      font-size: clamp(48px, 8vw, 80px);
+      letter-spacing: -0.05em;
+      margin: 0 0 20px;
+      background: linear-gradient(135deg, #F472B6, #FBBF24, #34D399, #22D3EE, #8B5CF6);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: rainbow 4s ease infinite;
+    }
+    .easter-egg__subtitle {
+      font-size: 20px;
+      color: var(--muted);
+      max-width: 500px;
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+    .easter-egg__code {
+      font-family: monospace;
+      font-size: 14px;
+      padding: 12px 20px;
+      border-radius: 12px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      margin-bottom: 40px;
+    }
+    .easter-egg__emoji {
+      font-size: 80px;
+      margin-bottom: 20px;
+      animation: bounce 1s ease infinite;
+    }
+    @keyframes rainbow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+    .fun-facts {
+      display: grid;
+      gap: 12px;
+      max-width: 400px;
+      text-align: left;
+      margin-top: 30px;
+    }
+    .fun-facts__item {
+      padding: 14px 18px;
+      border-radius: 14px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .fun-facts__item strong {
+      color: var(--fg);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Ambient background -->
+  <div class="bg">
+    <div class="bg__blob bg__blob--a"></div>
+    <div class="bg__blob bg__blob--b"></div>
+    <div class="bg__grid"></div>
+  </div>
+
+  <main class="easter-egg">
+    <div class="easter-egg__emoji">🎮</div>
+    <h1 class="easter-egg__title">You Found It!</h1>
+    <p class="easter-egg__subtitle">
+      Congrats, you found me! Gotta love the Konami Code.
+    </p>
+    <div class="easter-egg__code">↑ ↑ ↓ ↓ ← → ← →</div>
+    
+    <div class="fun-facts">
+      <div class="fun-facts__item">
+        <strong>Fun fact #1:</strong> I love to learning to cook, especially food from around the world.
+      </div>
+      <div class="fun-facts__item">
+        <strong>Fun fact #2:</strong> Kurt Vonnegut's quote "Practice any art... to make your soul grow." is my favorite quote and I try to live by it.
+      </div>
+      <div class="fun-facts__item">
+        <strong>Fun fact #3:</strong> I think folk music is the best because it makes me feel connected to the world and the people in it.
+      </div>
+    </div>
+
+    <div style="margin-top: 40px;">
+      <a class="btn btn--primary" href="index.html">
+        <span>Back to reality</span>
+        <span class="btn__arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

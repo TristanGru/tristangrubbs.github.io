@@ -49,23 +49,71 @@ if (burger && mobile) {
   });
 }
 
-// Theme toggle (dark/light)
+// Theme switcher (Midnight, Paper, Neon)
 const themeToggle = document.getElementById("themeToggle");
-const storedTheme = localStorage.getItem("theme");
-if (storedTheme === "light") document.documentElement.dataset.theme = "light";
+const themeIcon = document.getElementById("themeIcon");
+const themeName = document.getElementById("themeName");
 
-function toggleTheme() {
-  const isLight = document.documentElement.dataset.theme === "light";
-  if (isLight) {
-    delete document.documentElement.dataset.theme;
-    localStorage.setItem("theme", "dark");
-  } else {
-    document.documentElement.dataset.theme = "light";
-    localStorage.setItem("theme", "light");
+const themes = [
+  { name: "Midnight", value: "", icon: "◐" },
+  { name: "Paper", value: "paper", icon: "○" },
+  { name: "Ember", value: "ember", icon: "◈" }
+];
+
+let currentThemeIndex = 0;
+
+// Load stored theme
+const storedTheme = localStorage.getItem("theme");
+if (storedTheme) {
+  const index = themes.findIndex(t => t.value === storedTheme);
+  if (index !== -1) {
+    currentThemeIndex = index;
+    if (themes[index].value) {
+      document.documentElement.dataset.theme = themes[index].value;
+    }
   }
 }
 
-if (themeToggle) themeToggle.addEventListener("click", toggleTheme);
+function updateThemeUI() {
+  const theme = themes[currentThemeIndex];
+  if (themeIcon) themeIcon.textContent = theme.icon;
+  if (themeName) themeName.textContent = theme.name;
+}
+
+function cycleTheme() {
+  currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+  const theme = themes[currentThemeIndex];
+  
+  if (theme.value) {
+    document.documentElement.dataset.theme = theme.value;
+  } else {
+    delete document.documentElement.dataset.theme;
+  }
+  
+  localStorage.setItem("theme", theme.value);
+  updateThemeUI();
+}
+
+// Initialize UI
+updateThemeUI();
+
+if (themeToggle) themeToggle.addEventListener("click", cycleTheme);
+
+// Konami Code Easter Egg (Up, Up, Down, Down, Left, Right, Left, Right)
+const konamiCode = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight"];
+let konamiIndex = 0;
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === konamiCode[konamiIndex]) {
+    konamiIndex++;
+    if (konamiIndex === konamiCode.length) {
+      konamiIndex = 0;
+      window.location.href = "easter-egg.html";
+    }
+  } else {
+    konamiIndex = 0;
+  }
+});
 
 // Tilt effect for project cards and cards
 const tiltElements = document.querySelectorAll(".proj, .card");
