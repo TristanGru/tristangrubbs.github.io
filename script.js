@@ -131,11 +131,8 @@ const fallbackQuotes = [
 ];
 
 function displayQuote(quotes) {
-  const now = new Date();
-  const startOfYear = new Date(now.getFullYear(), 0, 0);
-  const diff = now - startOfYear;
-  const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const quoteIndex = dayOfYear % quotes.length;
+  // Random quote on each page load
+  const quoteIndex = Math.floor(Math.random() * quotes.length);
   const quote = quotes[quoteIndex];
   
   if (quoteText) quoteText.textContent = quote.text;
