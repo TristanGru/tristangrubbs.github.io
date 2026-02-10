@@ -366,6 +366,8 @@ button{ font: inherit; }
   box-shadow: 0 18px 50px var(--shadow);
   transform-style: preserve-3d;
   transition: transform 200ms var(--ease), box-shadow 200ms var(--ease);
+  display: flex;
+  flex-direction: column;
 }
 .card:hover{
   box-shadow: 0 25px 70px var(--shadow);
@@ -398,6 +400,17 @@ button{ font: inherit; }
 .card__title{ font-weight: 700; letter-spacing: -0.02em; }
 .card__sub{ color: var(--muted); font-size: 13px; margin-top: 2px; }
 .card__cta{ margin-top: 14px; }
+.card__meta{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+.card p:last-of-type{
+  margin-bottom: 14px;
+}
 
 .avatar{
   width: 44px;
