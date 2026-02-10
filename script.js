@@ -121,6 +121,43 @@ function toggleQuickView() {
 
 if (quickViewToggle) quickViewToggle.addEventListener("click", toggleQuickView);
 
+// Resume Modal
+const resumeBtn = document.getElementById("resumeBtn");
+const resumeModal = document.getElementById("resumeModal");
+const modalBackdrop = document.getElementById("modalBackdrop");
+const modalClose = document.getElementById("modalClose");
+const resumeFrame = document.getElementById("resumeFrame");
+
+function openResumeModal() {
+  if (resumeModal && resumeFrame) {
+    resumeFrame.src = "Tristan Grubbs Resume.pdf";
+    resumeModal.dataset.open = "true";
+    resumeModal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+  }
+}
+
+function closeResumeModal() {
+  if (resumeModal && resumeFrame) {
+    resumeModal.dataset.open = "false";
+    resumeModal.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+    // Clear iframe after transition
+    setTimeout(() => { resumeFrame.src = ""; }, 200);
+  }
+}
+
+if (resumeBtn) resumeBtn.addEventListener("click", openResumeModal);
+if (modalBackdrop) modalBackdrop.addEventListener("click", closeResumeModal);
+if (modalClose) modalClose.addEventListener("click", closeResumeModal);
+
+// Close modal on Escape key
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && resumeModal?.dataset.open === "true") {
+    closeResumeModal();
+  }
+});
+
 // Daily Quote
 const quoteText = document.getElementById("quoteText");
 const quoteAuthor = document.getElementById("quoteAuthor");

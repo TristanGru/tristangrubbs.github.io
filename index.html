@@ -513,10 +513,10 @@
               LinkedIn
               <span class="btn__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="btn btn--soft btn--full" href="Tristan Grubbs Resume.pdf" target="_blank" rel="noopener">
+            <button class="btn btn--soft btn--full" id="resumeBtn" type="button">
               Resume
               <span class="btn__arrow" aria-hidden="true">↓</span>
-            </a>
+            </button>
           </div>
         </div>
 
@@ -536,6 +536,28 @@
       </div>
     </section>
   </main>
+
+  <!-- Resume Modal -->
+  <div class="modal" id="resumeModal" aria-hidden="true">
+    <div class="modal__backdrop" id="modalBackdrop"></div>
+    <div class="modal__content">
+      <div class="modal__header">
+        <h3 class="modal__title">Resume</h3>
+        <div class="modal__actions">
+          <a class="btn btn--ghost" href="Tristan Grubbs Resume.pdf" download>
+            Download
+            <span class="btn__arrow" aria-hidden="true">↓</span>
+          </a>
+          <button class="btn btn--ghost modal__close" id="modalClose" type="button" aria-label="Close modal">
+            ✕
+          </button>
+        </div>
+      </div>
+      <div class="modal__body">
+        <iframe src="" id="resumeFrame" class="modal__iframe" title="Resume PDF"></iframe>
+      </div>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
