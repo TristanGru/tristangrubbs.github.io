@@ -518,6 +518,8 @@ button{ font: inherit; }
   overflow: hidden;
   transform-style: preserve-3d;
   transition: transform 200ms var(--ease), box-shadow 200ms var(--ease);
+  display: flex;
+  flex-direction: column;
 }
 .proj:hover{
   box-shadow: 0 25px 80px var(--shadow);
@@ -572,7 +574,7 @@ button{ font: inherit; }
   font-size: 12px;
   color: var(--muted);
 }
-.proj__body{ margin-top: 14px; display: grid; gap: 14px; }
+.proj__body{ margin-top: auto; padding-top: 14px; display: grid; gap: 14px; }
 .kpis{
   display: grid;
   grid-template-columns: repeat(3, minmax(0,1fr));
