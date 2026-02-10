@@ -191,6 +191,204 @@ if (quoteText && quoteAuthor) {
     });
 }
 
+// Code Playground - Dual Language (JavaScript + Python)
+const codeEditor = document.getElementById("codeEditor");
+const runCodeBtn = document.getElementById("runCode");
+const clearOutputBtn = document.getElementById("clearOutput");
+const codeOutput = document.getElementById("codeOutput");
+const playgroundStatus = document.getElementById("playgroundStatus");
+const languageTabs = document.querySelectorAll(".playground-tab");
+
+let currentLanguage = "javascript";
+let pyodideInstance = null;
+let pyodideLoading = false;
+
+const starterCode = {
+  javascript: `// Welcome to the JavaScript playground!
+const greet = (name) => {
+  return \`Hello, \${name}!\`;
+};
+
+console.log(greet("World"));
+console.log("2 + 2 =", 2 + 2);
+
+// Try arrays and loops
+const nums = [1, 2, 3, 4, 5];
+nums.forEach(n => console.log(n * n));`,
+  python: `# Welcome to the Python playground!
+def greet(name):
+    return f"Hello, {name}!"
+
+print(greet("World"))
+print("2 + 2 =", 2 + 2)
+
+# Try lists and loops
+nums = [1, 2, 3, 4, 5]
+for n in nums:
+    print(n ** 2)`
+};
+
+// Tab switching
+languageTabs.forEach(tab => {
+  tab.addEventListener("click", () => {
+    const lang = tab.dataset.lang;
+    if (lang === currentLanguage) return;
+    
+    languageTabs.forEach(t => t.classList.remove("active"));
+    tab.classList.add("active");
+    currentLanguage = lang;
+    
+    if (codeEditor) codeEditor.value = starterCode[lang];
+    if (codeOutput) codeOutput.innerHTML = '<span class="muted">Click "Run" to see output...</span>';
+    
+    if (lang === "python" && !pyodideInstance && !pyodideLoading) {
+      initPyodide();
+    }
+    
+    updateStatus();
+  });
+});
+
+// Load Pyodide
+async function initPyodide() {
+  if (pyodideLoading || pyodideInstance) return;
+  pyodideLoading = true;
+  updateStatus();
+  
+  try {
+    // loadPyodide is the global function from the Pyodide CDN
+    if (typeof loadPyodide === "function") {
+      pyodideInstance = await loadPyodide();
+    } else {
+      throw new Error("Pyodide not available");
+    }
+    pyodideLoading = false;
+    updateStatus();
+  } catch (err) {
+    pyodideLoading = false;
+    if (playgroundStatus) {
+      playgroundStatus.textContent = "Failed to load Python runtime: " + err.message;
+      playgroundStatus.className = "playground-full__status";
+    }
+  }
+}
+
+function updateStatus() {
+  if (!playgroundStatus) return;
+  
+  if (currentLanguage === "javascript") {
+    playgroundStatus.textContent = "JavaScript ready";
+    playgroundStatus.className = "playground-full__status ready";
+  } else if (pyodideLoading) {
+    playgroundStatus.textContent = "Loading Python runtime... (first time may take a few seconds)";
+    playgroundStatus.className = "playground-full__status loading";
+  } else if (pyodideInstance) {
+    playgroundStatus.textContent = "Python ready";
+    playgroundStatus.className = "playground-full__status ready";
+  } else {
+    playgroundStatus.textContent = "Click Run to load Python runtime";
+    playgroundStatus.className = "playground-full__status";
+  }
+}
+
+// Run code
+async function runCode() {
+  if (!codeEditor || !codeOutput) return;
+  
+  const code = codeEditor.value;
+  codeOutput.innerHTML = "";
+  
+  if (currentLanguage === "javascript") {
+    runJavaScript(code);
+  } else {
+    await runPython(code);
+  }
+}
+
+function runJavaScript(code) {
+  const logs = [];
+  const customConsole = {
+    log: (...args) => {
+      logs.push(args.map(arg => 
+        typeof arg === "object" ? JSON.stringify(arg, null, 2) : String(arg)
+      ).join(" "));
+    },
+    error: (...args) => {
+      logs.push('<span class="output-error">Error: ' + args.join(" ") + '</span>');
+    }
+  };
+  
+  try {
+    const fn = new Function("console", code);
+    fn(customConsole);
+    
+    if (logs.length === 0) {
+      codeOutput.innerHTML = '<span class="muted">Code executed (no output)</span>';
+    } else {
+      codeOutput.innerHTML = logs.map(log => 
+        `<span class="output-line">${log}</span>`
+      ).join("\n");
+    }
+  } catch (err) {
+    codeOutput.innerHTML = `<span class="output-error">${err.name}: ${err.message}</span>`;
+  }
+}
+
+async function runPython(code) {
+  if (!pyodideInstance) {
+    if (pyodideLoading) {
+      codeOutput.innerHTML = '<span class="muted">Python is still loading, please wait...</span>';
+      return;
+    }
+    await initPyodide();
+  }
+  
+  if (!pyodideInstance) {
+    codeOutput.innerHTML = '<span class="output-error">Failed to load Python runtime</span>';
+    return;
+  }
+  
+  try {
+    // Redirect Python stdout
+    pyodideInstance.runPython(`
+import sys
+from io import StringIO
+sys.stdout = StringIO()
+    `);
+    
+    pyodideInstance.runPython(code);
+    
+    const output = pyodideInstance.runPython("sys.stdout.getvalue()");
+    
+    if (output.trim() === "") {
+      codeOutput.innerHTML = '<span class="muted">Code executed (no output)</span>';
+    } else {
+      codeOutput.innerHTML = output.split("\n").map(line => 
+        `<span class="output-line">${escapeHtml(line)}</span>`
+      ).join("\n");
+    }
+  } catch (err) {
+    codeOutput.innerHTML = `<span class="output-error">${escapeHtml(err.message)}</span>`;
+  }
+}
+
+function escapeHtml(text) {
+  const div = document.createElement("div");
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+if (runCodeBtn) runCodeBtn.addEventListener("click", runCode);
+
+if (clearOutputBtn && codeOutput) {
+  clearOutputBtn.addEventListener("click", () => {
+    codeOutput.innerHTML = '<span class="muted">Click "Run" to see output...</span>';
+  });
+}
+
+// Initialize status
+updateStatus();
+
 // Konami Code Easter Egg (Up, Up, Down, Down, Left, Right, Left, Right)
 const konamiCode = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight"];
 let konamiIndex = 0;
