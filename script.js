@@ -125,25 +125,35 @@ if (quickViewToggle) quickViewToggle.addEventListener("click", toggleQuickView);
 const quoteText = document.getElementById("quoteText");
 const quoteAuthor = document.getElementById("quoteAuthor");
 
+// Fallback quotes in case fetch fails
+const fallbackQuotes = [
+  { text: "fallbackQuotes", author: "not working" }
+];
+
+function displayQuote(quotes) {
+  const now = new Date();
+  const startOfYear = new Date(now.getFullYear(), 0, 0);
+  const diff = now - startOfYear;
+  const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const quoteIndex = dayOfYear % quotes.length;
+  const quote = quotes[quoteIndex];
+  
+  if (quoteText) quoteText.textContent = quote.text;
+  if (quoteAuthor) quoteAuthor.textContent = quote.author;
+}
+
 if (quoteText && quoteAuthor) {
-  fetch("quotes.json")
-    .then((res) => res.json())
+  fetch("./quotes.json")
+    .then((res) => {
+      if (!res.ok) throw new Error("Failed to fetch");
+      return res.json();
+    })
     .then((quotes) => {
-      // Pick quote based on day of year (same quote all day)
-      const now = new Date();
-      const startOfYear = new Date(now.getFullYear(), 0, 0);
-      const diff = now - startOfYear;
-      const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const quoteIndex = dayOfYear % quotes.length;
-      const quote = quotes[quoteIndex];
-      
-      quoteText.textContent = quote.text;
-      quoteAuthor.textContent = quote.author;
+      displayQuote(quotes);
     })
     .catch(() => {
-      // Hide quote section if fetch fails
-      const quoteEl = document.getElementById("dailyQuote");
-      if (quoteEl) quoteEl.style.display = "none";
+      // Use fallback quotes if fetch fails
+      displayQuote(fallbackQuotes);
     });
 }
 
