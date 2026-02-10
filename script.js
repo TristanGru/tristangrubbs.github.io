@@ -99,6 +99,7 @@ updateThemeUI();
 
 if (themeToggle) themeToggle.addEventListener("click", cycleTheme);
 
+/* QUICK VIEW FEATURE (COMMENTED OUT)
 // Quick View / One-Minute Portfolio Mode
 const quickViewToggle = document.getElementById("quickViewToggle");
 
@@ -120,6 +121,7 @@ function toggleQuickView() {
 }
 
 if (quickViewToggle) quickViewToggle.addEventListener("click", toggleQuickView);
+*/
 
 // Resume Modal
 const resumeBtn = document.getElementById("resumeBtn");
