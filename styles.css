@@ -949,3 +949,110 @@ button{ font: inherit; }
 /* Quick view summary that appears */
 .quick-summary{ display: none; }
 [data-quick-view="true"] .quick-summary{ display: block; }
+
+/* ===========================================
+   WRITING GRID - Compact Cards
+   =========================================== */
+.writing-grid{
+  gap: 20px;
+}
+
+.card--compact{
+  padding: 20px 22px;
+}
+
+.card--compact h3{
+  font-size: 1rem;
+  margin-bottom: 8px;
+  line-height: 1.35;
+}
+
+.card--compact p{
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin-bottom: 12px;
+  color: var(--muted);
+}
+
+.card--compact .tag{
+  font-size: 0.7rem;
+  padding: 3px 8px;
+  margin-bottom: 10px;
+}
+
+.card--compact .card__meta{
+  font-size: 0.8rem;
+  gap: 12px;
+}
+
+/* 
+=====================================================================
+SINGLE-COLUMN LAYOUT (COMMENTED OUT - was too long to scroll)
+=====================================================================
+
+.writing-list{
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.writing-item{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius2);
+  padding: 28px 32px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.writing-item:hover{
+  border-color: var(--accent);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  transform: translateY(-2px);
+}
+
+.writing-item__header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.writing-item__title{
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0 0 12px 0;
+  line-height: 1.35;
+}
+
+.writing-item__desc{
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--muted);
+  margin: 0 0 16px 0;
+}
+
+.writing-item .link{
+  font-weight: 500;
+}
+
+@media (max-width: 600px){
+  .writing-item{
+    padding: 20px 24px;
+  }
+  .writing-item__header{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .writing-item__title{
+    font-size: 1.1rem;
+  }
+}
+
+END SINGLE-COLUMN LAYOUT
+=====================================================================
+*/

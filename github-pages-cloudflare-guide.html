@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GitHub Pages + Cloudflare Guide | Tristan Grubbs</title>
+  <meta name="description" content="Step-by-step guide for deploying a website with GitHub Pages, Cloudflare DNS, and HTTPS/SSL." />
+
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .guide { max-width: 800px; margin: 0 auto; }
+    .guide h2 { margin-top: 40px; margin-bottom: 16px; font-size: 24px; }
+    .guide h3 { margin-top: 28px; margin-bottom: 12px; font-size: 18px; color: var(--fg); }
+    .guide p, .guide li { line-height: 1.7; color: var(--muted); }
+    .guide ul, .guide ol { padding-left: 24px; margin: 12px 0; }
+    .guide li { margin: 8px 0; }
+    .guide code {
+      background: rgba(139,92,246,0.15);
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 14px;
+      color: var(--fg);
+    }
+    .guide pre {
+      background: rgba(0,0,0,0.3);
+      padding: 16px;
+      border-radius: 12px;
+      overflow-x: auto;
+      margin: 16px 0;
+      border: 1px solid var(--border);
+    }
+    .guide pre code {
+      background: none;
+      padding: 0;
+    }
+    .guide .note {
+      background: rgba(34,197,94,0.1);
+      border-left: 3px solid var(--accentB);
+      padding: 12px 16px;
+      border-radius: 0 12px 12px 0;
+      margin: 16px 0;
+    }
+    .guide .warning {
+      background: rgba(239,68,68,0.1);
+      border-left: 3px solid #EF4444;
+      padding: 12px 16px;
+      border-radius: 0 12px 12px 0;
+      margin: 16px 0;
+    }
+    .guide table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+    }
+    .guide th, .guide td {
+      padding: 12px;
+      text-align: left;
+      border: 1px solid var(--border);
+    }
+    .guide th {
+      background: var(--card);
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Ambient background -->
+  <div class="bg">
+    <div class="bg__blob bg__blob--a"></div>
+    <div class="bg__blob bg__blob--b"></div>
+    <div class="bg__grid"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="header" data-elevate>
+    <div class="container header__inner">
+      <a class="brand" href="index.html" aria-label="Home">
+        <span class="brand__mark" aria-hidden="true"></span>
+        <span class="brand__name">Tristan Grubbs</span>
+      </a>
+
+      <nav class="nav" aria-label="Primary">
+        <a class="nav__link" href="index.html#work">Work</a>
+        <a class="nav__link" href="index.html#projects">Projects</a>
+        <a class="nav__link" href="index.html#about">About</a>
+        <a class="nav__link" href="index.html#writing">Writing</a>
+        <a class="nav__link" href="index.html#games">Games</a>
+        <a class="nav__link" href="index.html#contact">Contact</a>
+      </nav>
+
+      <button class="btn btn--ghost header__cta" id="themeToggle" type="button" aria-label="Switch theme">
+        <span class="btn__icon" id="themeIcon" aria-hidden="true">◐</span>
+        <span class="btn__text" id="themeName">Midnight</span>
+      </button>
+
+      <button class="burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="section">
+      <div class="container">
+        <div class="guide reveal">
+          <div class="section__head">
+            <div class="tag" style="margin-bottom: 16px;">Technical Guide</div>
+            <h1 class="h2">Publish a Website with GitHub Pages + Cloudflare DNS/SSL</h1>
+            <p class="lead">A complete walkthrough for hosting your site on GitHub Pages with a custom domain, Cloudflare DNS, and HTTPS.</p>
+          </div>
+
+          <p>This guide walks you through:</p>
+          <ul>
+            <li>Buying a domain in Cloudflare</li>
+            <li>Hosting your site on GitHub Pages</li>
+            <li>Pointing your domain at GitHub using DNS records</li>
+            <li>Enabling HTTPS (SSL)</li>
+          </ul>
+
+          <h2>Prerequisites</h2>
+          <ul>
+            <li>A Cloudflare account</li>
+            <li>A GitHub account</li>
+            <li>A project/repo you want to host (or a new one)</li>
+          </ul>
+
+          <h2>1) Purchase a Domain in Cloudflare</h2>
+          <ol>
+            <li>Log into Cloudflare</li>
+            <li>Buy a domain (or transfer one in)</li>
+            <li>Confirm the domain appears in your Account Home list</li>
+          </ol>
+
+          <h2>2) Create a New GitHub Repository</h2>
+          <ol>
+            <li>Create a new repo on GitHub</li>
+            <li>Put your website files in it (at minimum, an <code>index.html</code> in the repo root)</li>
+          </ol>
+
+          <h2>3) Enable GitHub Pages</h2>
+          <p>In your GitHub repo, go to: <strong>Settings → Pages</strong></p>
+          <p>Under Build and deployment, set:</p>
+          <ul>
+            <li><strong>Source:</strong> "Deploy from a branch"</li>
+            <li><strong>Branch:</strong> <code>main</code> (and <code>/root</code> unless you're using <code>/docs</code>)</li>
+          </ul>
+          <p>GitHub will generate a Pages URL for you (something like <code>https://&lt;user&gt;.github.io/&lt;repo&gt;/</code>) once it builds.</p>
+
+          <h2>4) Add Your Custom Domain in GitHub Pages</h2>
+          <p>In <strong>Settings → Pages</strong>, find <strong>Custom domain</strong></p>
+          <p>Enter your domain:</p>
+          <ul>
+            <li>If you want the root domain: <code>example.com</code></li>
+            <li>If you want the www version: <code>www.example.com</code></li>
+          </ul>
+          <p>Save. This triggers a DNS verification check that will fail until you add DNS records in Cloudflare.</p>
+
+          <h2>5) Open Your Domain in Cloudflare</h2>
+          <ol>
+            <li>Go to Cloudflare Dashboard</li>
+            <li>Click your new domain</li>
+            <li>In the left sidebar, go to <strong>DNS → Records</strong></li>
+          </ol>
+
+          <h2>6) Add DNS Records (A + CNAME)</h2>
+          
+          <h3>A Records (for the apex/root domain)</h3>
+          <p>Create 4 records with these settings:</p>
+          <table>
+            <tr>
+              <th>Type</th>
+              <th>Name</th>
+              <th>IPv4 Address</th>
+              <th>Proxy</th>
+              <th>TTL</th>
+            </tr>
+            <tr>
+              <td>A</td>
+              <td>@</td>
+              <td><code>185.199.108.153</code></td>
+              <td>DNS only</td>
+              <td>Auto</td>
+            </tr>
+            <tr>
+              <td>A</td>
+              <td>@</td>
+              <td><code>185.199.109.153</code></td>
+              <td>DNS only</td>
+              <td>Auto</td>
+            </tr>
+            <tr>
+              <td>A</td>
+              <td>@</td>
+              <td><code>185.199.110.153</code></td>
+              <td>DNS only</td>
+              <td>Auto</td>
+            </tr>
+            <tr>
+              <td>A</td>
+              <td>@</td>
+              <td><code>185.199.111.153</code></td>
+              <td>DNS only</td>
+              <td>Auto</td>
+            </tr>
+          </table>
+          <p class="note">These are GitHub Pages' IPs for custom domains. All four are required for reliability.</p>
+
+          <h3>CNAME Record (for www)</h3>
+          <table>
+            <tr>
+              <th>Type</th>
+              <th>Name</th>
+              <th>Target</th>
+              <th>Proxy</th>
+              <th>TTL</th>
+            </tr>
+            <tr>
+              <td>CNAME</td>
+              <td>www</td>
+              <td><code>&lt;user&gt;.github.io</code></td>
+              <td>DNS only</td>
+              <td>Auto</td>
+            </tr>
+          </table>
+
+          <p class="warning"><strong>Common mistake:</strong> Putting only the repo name (like <code>my-site</code>) as the CNAME target. That is not a real hostname. Use <code>&lt;user&gt;.github.io</code> unless GitHub explicitly tells you otherwise.</p>
+
+          <h2>7) Set Cloudflare SSL/TLS Mode</h2>
+          <ol>
+            <li>In Cloudflare sidebar, go to <strong>SSL/TLS</strong></li>
+            <li>Find the encryption mode box and click <strong>Configure</strong></li>
+            <li>Select: <strong>Full (strict)</strong></li>
+          </ol>
+
+          <h2>8) Finish HTTPS in GitHub Pages</h2>
+          <ol>
+            <li>Go back to your repo: <strong>Settings → Pages</strong></li>
+            <li>Wait for the DNS check to show successful (this can take a bit)</li>
+            <li>Enable <strong>Enforce HTTPS</strong></li>
+          </ol>
+
+          <h2>9) Start Building Your Site</h2>
+          <ol>
+            <li>Open your IDE</li>
+            <li>Clone the repo (if you haven't):
+              <pre><code>git clone &lt;your-repo-url&gt;</code></pre>
+            </li>
+            <li>Make changes, commit, push to main</li>
+            <li>GitHub Pages redeploys automatically</li>
+          </ol>
+
+          <h2>Troubleshooting</h2>
+          
+          <p><strong>DNS check won't pass:</strong><br>
+          Confirm Cloudflare records are set to <strong>DNS only</strong>, not proxied.</p>
+          
+          <p><strong>Site loads on www but not root (or vice versa):</strong><br>
+          Make sure you added the 4 A records for the root and the CNAME for www.</p>
+          
+          <p><strong>HTTPS not working:</strong><br>
+          Cloudflare mode must be <strong>Full (strict)</strong> and GitHub must have <strong>Enforce HTTPS</strong> enabled.</p>
+          
+          <p><strong>Wrong CNAME target:</strong><br>
+          Use <code>&lt;user&gt;.github.io</code> (not the repository name).</p>
+
+          <h2>You're Done</h2>
+          <p>Your domain should now serve your GitHub Pages site over HTTPS. Go make something nice, or at least something that loads.</p>
+
+          <div style="margin-top: 40px;">
+            <a class="btn btn--ghost" href="writing.html">← Back to Writing</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <footer class="footer">
+          <div class="footer__left">
+            <span class="muted">© <span id="year"></span> Tristan Grubbs</span>
+          </div>
+          <div class="footer__right">
+            <a class="link" href="index.html">← Back to Home</a>
+          </div>
+        </footer>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
