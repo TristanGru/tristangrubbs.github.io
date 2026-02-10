@@ -640,6 +640,32 @@ button{ font: inherit; }
 }
 .cta__actions{ display: grid; gap: 10px; }
 
+/* Daily Quote */
+.daily-quote{
+  margin-top: 30px;
+  padding: 20px;
+  border-radius: 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  text-align: center;
+}
+.daily-quote__text{
+  margin: 0;
+  font-style: italic;
+  color: var(--fg);
+  line-height: 1.6;
+  font-size: 15px;
+}
+.daily-quote__text::before{ content: '"'; }
+.daily-quote__text::after{ content: '"'; }
+.daily-quote__author{
+  display: block;
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.daily-quote__author::before{ content: '— '; }
+
 .footer{
   margin-top: 26px;
   padding-top: 18px;
@@ -681,3 +707,29 @@ button{ font: inherit; }
   .bg__blob{ animation: none; }
   .btn{ transition: none; }
 }
+
+/* Quick View / One-Minute Portfolio Mode */
+[data-quick-view="true"] .section{ padding: 40px 0; }
+[data-quick-view="true"] .hero{ padding-top: 40px; }
+[data-quick-view="true"] .hero__grid{ grid-template-columns: 1fr; }
+[data-quick-view="true"] .hero__card{ display: none; }
+[data-quick-view="true"] .hero__meta{ display: none; }
+[data-quick-view="true"] .logos{ display: none; }
+[data-quick-view="true"] .hero__subtitle{ display: none; }
+[data-quick-view="true"] .hero__actions{ display: none; }
+
+[data-quick-view="true"] #work .section__head .lead{ display: none; }
+[data-quick-view="true"] #work .grid--3 .card:nth-child(n+4){ display: none; }
+[data-quick-view="true"] #work .card .bullets{ display: none; }
+[data-quick-view="true"] #work .card p{ display: none; }
+
+[data-quick-view="true"] #projects{ display: none; }
+[data-quick-view="true"] #about{ display: none; }
+[data-quick-view="true"] #writing{ display: none; }
+[data-quick-view="true"] #games{ display: none; }
+[data-quick-view="true"] #contact{ display: none; }
+[data-quick-view="true"] .footer{ display: none; }
+
+/* Quick view summary that appears */
+.quick-summary{ display: none; }
+[data-quick-view="true"] .quick-summary{ display: block; }

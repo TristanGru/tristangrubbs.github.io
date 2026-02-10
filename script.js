@@ -99,6 +99,54 @@ updateThemeUI();
 
 if (themeToggle) themeToggle.addEventListener("click", cycleTheme);
 
+// Quick View / One-Minute Portfolio Mode
+const quickViewToggle = document.getElementById("quickViewToggle");
+
+function toggleQuickView() {
+  const isQuick = document.documentElement.dataset.quickView === "true";
+  if (isQuick) {
+    delete document.documentElement.dataset.quickView;
+    if (quickViewToggle) {
+      quickViewToggle.querySelector(".btn__text").textContent = "Quick";
+    }
+  } else {
+    document.documentElement.dataset.quickView = "true";
+    if (quickViewToggle) {
+      quickViewToggle.querySelector(".btn__text").textContent = "Full";
+    }
+    // Scroll to top for scannable experience
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+}
+
+if (quickViewToggle) quickViewToggle.addEventListener("click", toggleQuickView);
+
+// Daily Quote
+const quoteText = document.getElementById("quoteText");
+const quoteAuthor = document.getElementById("quoteAuthor");
+
+if (quoteText && quoteAuthor) {
+  fetch("quotes.json")
+    .then((res) => res.json())
+    .then((quotes) => {
+      // Pick quote based on day of year (same quote all day)
+      const now = new Date();
+      const startOfYear = new Date(now.getFullYear(), 0, 0);
+      const diff = now - startOfYear;
+      const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const quoteIndex = dayOfYear % quotes.length;
+      const quote = quotes[quoteIndex];
+      
+      quoteText.textContent = quote.text;
+      quoteAuthor.textContent = quote.author;
+    })
+    .catch(() => {
+      // Hide quote section if fetch fails
+      const quoteEl = document.getElementById("dailyQuote");
+      if (quoteEl) quoteEl.style.display = "none";
+    });
+}
+
 // Konami Code Easter Egg (Up, Up, Down, Down, Left, Right, Left, Right)
 const konamiCode = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight"];
 let konamiIndex = 0;

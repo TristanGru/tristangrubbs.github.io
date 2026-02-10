@@ -44,6 +44,11 @@
         <a class="nav__link" href="#contact">Contact</a>
       </nav>
 
+      <button class="btn btn--ghost header__cta" id="quickViewToggle" type="button" aria-label="Toggle quick view">
+        <span class="btn__icon" aria-hidden="true">⚡</span>
+        <span class="btn__text">Quick</span>
+      </button>
+
       <button class="btn btn--ghost header__cta" id="themeToggle" type="button" aria-label="Switch theme">
         <span class="btn__icon" id="themeIcon" aria-hidden="true">◐</span>
         <span class="btn__text" id="themeName">Midnight</span>
@@ -98,6 +103,22 @@
                 <span>Contact</span>
                 <span class="btn__arrow" aria-hidden="true">↗</span>
               </a>
+            </div>
+
+            <!-- Quick View Summary (only visible in quick mode) -->
+            <div class="quick-summary">
+              <ul class="bullets" style="margin-top: 20px; font-size: 15px;">
+                <li>CS @ UVA, graduating May 2026</li>
+                <li>Data Analyst intern at Naval Information Warfare Center</li>
+                <li>Built Power BI dashboards from 11+ data sources</li>
+                <li>Skills: SQL, Python, Power BI, Excel</li>
+                <li>Looking for analyst & consulting roles</li>
+              </ul>
+              <div style="margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap;">
+                <a class="btn btn--primary" href="mailto:tristancgrubbs@gmail.com">Email me ↗</a>
+                <a class="btn btn--soft" href="https://www.linkedin.com/in/tristan-grubbs" target="_blank">LinkedIn ↗</a>
+                <a class="btn btn--ghost" href="Tristan Grubbs Resume.pdf" target="_blank">Resume ↓</a>
+              </div>
             </div>
 
             <div class="hero__meta">
@@ -497,6 +518,11 @@
               <span class="btn__arrow" aria-hidden="true">↓</span>
             </a>
           </div>
+        </div>
+
+        <div class="daily-quote" id="dailyQuote">
+          <p class="daily-quote__text" id="quoteText"></p>
+          <span class="daily-quote__author" id="quoteAuthor"></span>
         </div>
 
         <footer class="footer">
