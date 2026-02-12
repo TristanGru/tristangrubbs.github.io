@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Blog | Tristan Grubbs</title>
+  <meta name="description" content="Short thoughts on tech, AI, data, and what I'm learning." />
+
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <!-- Ambient background -->
+  <div class="bg">
+    <div class="bg__blob bg__blob--a"></div>
+    <div class="bg__blob bg__blob--b"></div>
+    <div class="bg__grid"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="header" data-elevate>
+    <div class="container header__inner">
+      <a class="brand" href="index.html" aria-label="Home">
+        <span class="brand__mark" aria-hidden="true"></span>
+        <span class="brand__name">Tristan Grubbs</span>
+      </a>
+
+      <nav class="nav" aria-label="Primary">
+        <a class="nav__link" href="index.html#work">Work</a>
+        <a class="nav__link" href="index.html#projects">Projects</a>
+        <a class="nav__link" href="index.html#about">About</a>
+        <a class="nav__link" href="index.html#writing">Writing/Blog</a>
+        <a class="nav__link" href="index.html#games">Games</a>
+        <a class="nav__link" href="index.html#contact">Contact</a>
+      </nav>
+
+      <button class="btn btn--ghost header__cta" id="themeToggle" type="button" aria-label="Switch theme">
+        <span class="btn__icon" id="themeIcon" aria-hidden="true">◐</span>
+        <span class="btn__text" id="themeName">Midnight</span>
+      </button>
+
+      <button class="burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <div class="mobile" id="mobileNav" aria-hidden="true">
+      <div class="container mobile__inner">
+        <a class="mobile__link" href="index.html#work">Work</a>
+        <a class="mobile__link" href="index.html#projects">Projects</a>
+        <a class="mobile__link" href="index.html#about">About</a>
+        <a class="mobile__link" href="index.html#writing">Writing/Blog</a>
+        <a class="mobile__link" href="index.html#games">Games</a>
+        <a class="mobile__link" href="index.html#contact">Contact</a>
+        <div class="mobile__divider"></div>
+        <a class="mobile__link" href="index.html#contact">Get in touch →</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- BLOG -->
+    <section class="hero section">
+      <div class="container">
+        <div class="section__head reveal">
+          <h1 class="h2">Blog</h1>
+          <p class="lead">
+            Short thoughts on recent tech and business headlines.<br>
+            <span class="muted" style="font-size: 0.85em;">(All thoughts are my own. All posts are grammar-checked and posted by Claude Opus 4.5)</span>
+          </p>
+        </div>
+
+        <div class="blog-feed" style="margin-top: 32px;">
+
+          <!-- OpenAI 4o Shutdown -->
+          <article class="blog-post reveal" data-expanded="false">
+            <div class="blog-post__preview">
+              <time class="blog-post__date" datetime="2026-02-12">Feb 12, 2026</time>
+              <h3 class="blog-post__title">OpenAI Shuts Down 4o: What It Means for Human-AI Relationships</h3>
+              <span class="blog-post__expand-hint">Click to read →</span>
+            </div>
+            <div class="blog-post__full">
+              <div class="blog-post__full-header">
+                <time class="blog-post__date" datetime="2026-02-12">Feb 12, 2026</time>
+                <button class="blog-post__collapse" type="button" aria-label="Collapse post">✕</button>
+              </div>
+              <h3 class="blog-post__title">OpenAI Shuts Down 4o: What It Means for Human-AI Relationships</h3>
+              <div class="blog-post__content">
+                <p>
+                  Recently, OpenAI decided to shut down its 4o model, much to the dismay of many users. 
+                  4o had carved out a niche due to its persistent agreeableness—something many users became 
+                  overly attached to. I'm not sure exactly how human-AI relationships will play out over the 
+                  coming years, but this decision raises some important questions and concerns.
+                </p>
+                <p><strong>A few things I'm thinking about:</strong></p>
+                <ol style="margin: 12px 0 12px 20px; color: var(--muted); line-height: 1.7;">
+                  <li style="margin-bottom: 8px;">Will chatbot companies be held liable for harm caused by poorly aligned models?</li>
+                  <li style="margin-bottom: 8px;">What responsibility—and what policies—will AI companies adopt regarding the relationships their technology fosters?</li>
+                  <li style="margin-bottom: 8px;">Is there a future where this becomes commonplace as AI improves toward AGI and human-like emotional responses?</li>
+                </ol>
+                <p>
+                  This is the first major case of human-AI relationships becoming a mainstream point of discussion, 
+                  but it won't be the last. These questions will only grow more important—and more nuanced—as the 
+                  technology continues to evolve.
+                </p>
+                <a class="link" href="https://www.wsj.com/tech/ai/chatgpt-4o-openai-315138b8" target="_blank" rel="noopener">Read the WSJ article ↗</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- 
+          =====================================================================
+          TEMPLATE FOR NEW POSTS - Copy this block and fill in your content
+          =====================================================================
+          
+          <article class="blog-post reveal" data-expanded="false">
+            <div class="blog-post__preview">
+              <time class="blog-post__date" datetime="YYYY-MM-DD">Mon DD, YYYY</time>
+              <h3 class="blog-post__title">Post Title</h3>
+              <span class="blog-post__expand-hint">Click to read →</span>
+            </div>
+            <div class="blog-post__full">
+              <div class="blog-post__full-header">
+                <time class="blog-post__date" datetime="YYYY-MM-DD">Mon DD, YYYY</time>
+                <button class="blog-post__collapse" type="button" aria-label="Collapse post">✕</button>
+              </div>
+              <h3 class="blog-post__title">Post Title</h3>
+              <div class="blog-post__content">
+                <p>
+                  Your post content here. You can have multiple paragraphs.
+                </p>
+                <p>
+                  Add more paragraphs as needed.
+                </p>
+                <a class="link" href="URL" target="_blank" rel="noopener">Related link ↗</a>
+              </div>
+            </div>
+          </article>
+          
+          =====================================================================
+          -->
+
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <section class="section">
+      <div class="container">
+        <footer class="footer">
+          <div class="footer__left">
+            <span class="muted">© <span id="year"></span> Tristan Grubbs</span>
+          </div>
+          <div class="footer__right">
+            <a class="link" href="index.html">← Back to Home</a>
+          </div>
+        </footer>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

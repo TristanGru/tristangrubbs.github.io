@@ -441,3 +441,27 @@ tiltElements.forEach((el) => {
     el.style.transform = "perspective(1000px) rotateX(0) rotateY(0) scale(1)";
   });
 });
+
+// Blog post expand/collapse functionality
+const blogPosts = document.querySelectorAll(".blog-post");
+
+blogPosts.forEach((post) => {
+  // Click on preview to expand
+  const preview = post.querySelector(".blog-post__preview");
+  if (preview) {
+    preview.addEventListener("click", () => {
+      post.dataset.expanded = "true";
+      // Scroll post into view smoothly
+      post.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+
+  // Click collapse button to shrink
+  const collapseBtn = post.querySelector(".blog-post__collapse");
+  if (collapseBtn) {
+    collapseBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      post.dataset.expanded = "false";
+    });
+  }
+});
