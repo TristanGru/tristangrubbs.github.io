@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -9,7 +9,7 @@
   <!-- Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -23,42 +23,41 @@
   </div>
 
   <!-- Header -->
-  <header class="header" data-elevate>
-    <div class="container header__inner">
+  <header class="site-header" data-elevate>
+    <div class="container header-inner">
       <a class="brand" href="index.html" aria-label="Home">
-        <span class="brand__mark" aria-hidden="true"></span>
-        <span class="brand__name">Tristan Grubbs</span>
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-name">Tristan Grubbs</span>
       </a>
 
-      <nav class="nav" aria-label="Primary">
-        <a class="nav__link" href="index.html#work">Work</a>
-        <a class="nav__link" href="index.html#projects">Projects</a>
-        <a class="nav__link" href="index.html#about">About</a>
-        <a class="nav__link" href="index.html#writing">Writing/Blog</a>
-        <a class="nav__link" href="index.html#games">Games</a>
-        <a class="nav__link" href="index.html#contact">Contact</a>
+      <nav class="site-nav" aria-label="Primary">
+        <a class="nav-link" href="index.html#hero">Me</a>
+        <a class="nav-link" data-zone="projects" href="index.html#projects">Projects</a>
+        <a class="nav-link" data-zone="work" href="index.html#work">Work</a>
+        <a class="nav-link" data-zone="explore" href="index.html#explore">Explore</a>
+        <a class="nav-link" data-zone="contact" href="index.html#contact">Contact</a>
       </nav>
 
-      <button class="btn btn--ghost header__cta" id="themeToggle" type="button" aria-label="Switch theme">
-        <span class="btn__icon" id="themeIcon" aria-hidden="true">◐</span>
-        <span class="btn__text" id="themeName">Midnight</span>
-      </button>
+      <div class="header-cta">
+        <a class="button button-ghost" href="blog.html">Read my blog!</a>
+        <a class="button button-primary" href="Tristan Grubbs Resume.pdf" target="_blank" rel="noopener">Resume</a>
+        <a class="button button-ghost" href="index.html#contact">Contact</a>
+      </div>
 
-      <button class="burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false">
+      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open menu" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
     </div>
 
-    <div class="mobile" id="mobileNav" aria-hidden="true">
-      <div class="container mobile__inner">
-        <a class="mobile__link" href="index.html#work">Work</a>
-        <a class="mobile__link" href="index.html#projects">Projects</a>
-        <a class="mobile__link" href="index.html#about">About</a>
-        <a class="mobile__link" href="index.html#writing">Writing/Blog</a>
-        <a class="mobile__link" href="index.html#games">Games</a>
-        <a class="mobile__link" href="index.html#contact">Contact</a>
-        <div class="mobile__divider"></div>
-        <a class="mobile__link" href="index.html#contact">Get in touch →</a>
+    <div class="mobile-nav" id="mobileNav" aria-hidden="true">
+      <div class="container mobile-nav-inner">
+        <a class="mobile-link" href="index.html#hero">Me</a>
+        <a class="mobile-link" href="index.html#projects">Projects</a>
+        <a class="mobile-link" href="index.html#work">Work</a>
+        <a class="mobile-link" href="index.html#explore">Explore</a>
+        <a class="mobile-link" href="index.html#contact">Contact</a>
+        <a class="mobile-link" href="blog.html">Read my blog!</a>
+        <a class="mobile-link" href="Tristan Grubbs Resume.pdf" target="_blank" rel="noopener">Resume</a>
       </div>
     </div>
   </header>
@@ -82,33 +81,33 @@
             <div class="blog-post__preview">
               <time class="blog-post__date" datetime="2026-02-12">Feb 12, 2026</time>
               <h3 class="blog-post__title">OpenAI Shuts Down 4o: What It Means for Human-AI Relationships</h3>
-              <span class="blog-post__expand-hint">Click to read →</span>
+              <span class="blog-post__expand-hint">Click to read &rarr;</span>
             </div>
             <div class="blog-post__full">
               <div class="blog-post__full-header">
                 <time class="blog-post__date" datetime="2026-02-12">Feb 12, 2026</time>
-                <button class="blog-post__collapse" type="button" aria-label="Collapse post">✕</button>
+                <button class="blog-post__collapse" type="button" aria-label="Collapse post">&times;</button>
               </div>
               <h3 class="blog-post__title">OpenAI Shuts Down 4o: What It Means for Human-AI Relationships</h3>
               <div class="blog-post__content">
                 <p>
                   Recently, OpenAI decided to shut down its 4o model, much to the dismay of many users. 
-                  4o had carved out a niche due to its persistent agreeableness—something many users became 
+                  4o had carved out a niche due to its persistent agreeableness&mdash;something many users became 
                   overly attached to. I'm not sure exactly how human-AI relationships will play out over the 
                   coming years, but this decision raises some important questions and concerns.
                 </p>
                 <p><strong>A few things I'm thinking about:</strong></p>
                 <ol style="margin: 12px 0 12px 20px; color: var(--muted); line-height: 1.7;">
                   <li style="margin-bottom: 8px;">Will chatbot companies be held liable for harm caused by poorly aligned models?</li>
-                  <li style="margin-bottom: 8px;">What responsibility—and what policies—will AI companies adopt regarding the relationships their technology fosters?</li>
+                  <li style="margin-bottom: 8px;">What responsibility&mdash;and what policies&mdash;will AI companies adopt regarding the relationships their technology fosters?</li>
                   <li style="margin-bottom: 8px;">Is there a future where this becomes commonplace as AI improves toward AGI and human-like emotional responses?</li>
                 </ol>
                 <p>
                   This is the first major case of human-AI relationships becoming a mainstream point of discussion, 
-                  but it won't be the last. These questions will only grow more important—and more nuanced—as the 
+                  but it won't be the last. These questions will only grow more important&mdash;and more nuanced&mdash;as the 
                   technology continues to evolve.
                 </p>
-                <a class="link" href="https://www.wsj.com/tech/ai/chatgpt-4o-openai-315138b8" target="_blank" rel="noopener">Read the WSJ article ↗</a>
+                <a class="link" href="https://www.wsj.com/tech/ai/chatgpt-4o-openai-315138b8" target="_blank" rel="noopener">Read the WSJ article &rarr;</a>
               </div>
             </div>
           </article>
@@ -122,12 +121,12 @@
             <div class="blog-post__preview">
               <time class="blog-post__date" datetime="YYYY-MM-DD">Mon DD, YYYY</time>
               <h3 class="blog-post__title">Post Title</h3>
-              <span class="blog-post__expand-hint">Click to read →</span>
+              <span class="blog-post__expand-hint">Click to read &rarr;</span>
             </div>
             <div class="blog-post__full">
               <div class="blog-post__full-header">
                 <time class="blog-post__date" datetime="YYYY-MM-DD">Mon DD, YYYY</time>
-                <button class="blog-post__collapse" type="button" aria-label="Collapse post">✕</button>
+                <button class="blog-post__collapse" type="button" aria-label="Collapse post">&times;</button>
               </div>
               <h3 class="blog-post__title">Post Title</h3>
               <div class="blog-post__content">
@@ -137,7 +136,7 @@
                 <p>
                   Add more paragraphs as needed.
                 </p>
-                <a class="link" href="URL" target="_blank" rel="noopener">Related link ↗</a>
+                <a class="link" href="URL" target="_blank" rel="noopener">Related link &rarr;</a>
               </div>
             </div>
           </article>
@@ -154,10 +153,10 @@
       <div class="container">
         <footer class="footer">
           <div class="footer__left">
-            <span class="muted">© <span id="year"></span> Tristan Grubbs</span>
+            <span class="muted">&copy; <span id="year"></span> Tristan Grubbs</span>
           </div>
           <div class="footer__right">
-            <a class="link" href="index.html">← Back to Home</a>
+            <a class="link" href="index.html">&larr; Back to Home</a>
           </div>
         </footer>
       </div>
@@ -167,3 +166,5 @@
   <script src="script.js"></script>
 </body>
 </html>
+
+
