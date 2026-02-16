@@ -105,7 +105,7 @@ const exploreData = {
     {
       tag: "Short-form Posts",
       title: "Blog",
-      summary: "Latest post (Feb 12, 2026): a quick take on OpenAI retiring GPT-4o and what that signals about human-AI attachment, platform responsibility, and policy pressure.",
+      summary: "Latest post (Feb 16, 2026): why university partnerships for paid AI tools can reduce equity gaps as AI becomes part of how students learn.",
       preview: [
         "Business, AI, technology, and market commentary",
         "Written from a technical background",
