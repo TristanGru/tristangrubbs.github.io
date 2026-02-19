@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Document Access</title>
+  <meta name="robots" content="noindex, nofollow, noarchive" />
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0e1118;
+      --panel: #151a24;
+      --text: #e6ebf4;
+      --muted: #a8b2c7;
+      --line: #2a3449;
+      --accent: #6bb8ff;
+      --accent-hover: #8ac6ff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Space Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at 10% 10%, #1a2333 0%, var(--bg) 45%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    main {
+      width: min(1100px, 94vw);
+      margin: 28px auto;
+      background: color-mix(in oklab, var(--panel) 92%, black 8%);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.35rem, 2vw, 1.8rem);
+    }
+
+    p {
+      margin: 0 0 14px;
+      color: var(--muted);
+    }
+
+    a {
+      display: inline-block;
+      text-decoration: none;
+      color: #051426;
+      background: var(--accent);
+      border: 1px solid transparent;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-weight: 600;
+    }
+
+    a:hover {
+      background: var(--accent-hover);
+    }
+
+    iframe {
+      display: block;
+      margin-top: 16px;
+      width: 100%;
+      min-height: 78vh;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #11141d;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>PRD Access</h1>
+    <p>Use the link below to open the PDF inside this page.</p>
+    <a href="PRD_AI_Humanity_Website.pdf" target="prdViewer">Open PRD PDF</a>
+    <iframe name="prdViewer" title="PRD PDF Viewer" src="about:blank"></iframe>
+  </main>
+</body>
+</html>
