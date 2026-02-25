@@ -1,0 +1,1802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Ashen Road</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0d0d0d;color:#e8e0d0;font-family:Georgia,serif;min-height:100vh;display:flex;flex-direction:column}
+#hud{position:fixed;top:0;left:0;right:0;z-index:100;background:#111;border-bottom:1px solid #333;padding:8px 16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.hud-label{font-family:"Cinzel",serif;font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1px}
+.bar-wrap{display:flex;flex-direction:column;gap:2px;min-width:100px}
+.bar{height:10px;background:#222;border-radius:3px;overflow:hidden;border:1px solid #333}
+.bar-fill{height:100%;transition:width 0.3s ease}
+.hp-fill{background:linear-gradient(90deg,#cc3333,#dd4444)}
+.stamina-fill{background:linear-gradient(90deg,#b8860b,#d4af37)}
+.heat-dots{display:flex;gap:3px;margin-top:2px}
+.heat-dot{width:10px;height:10px;border-radius:50%;border:1px solid #555;background:#222;transition:background 0.3s}
+.heat-dot.active{background:#ff6600;border-color:#ff9900;box-shadow:0 0 4px #ff6600}
+.hud-stat{font-family:"Cinzel",serif;font-size:12px;color:#d4af37}
+.hud-sep{color:#333;font-size:18px}
+#main{margin-top:76px;flex:1;display:flex;flex-direction:column;max-width:800px;width:100%;margin-left:auto;margin-right:auto;padding:16px}
+#location-header{margin-bottom:12px}
+.loc-name{font-family:"Cinzel",serif;font-size:20px;color:#d4af37;margin-bottom:8px;letter-spacing:2px}
+.ascii-art{font-family:"Courier New",monospace;font-size:12px;color:#776655;white-space:pre;line-height:1.3;background:#0a0a0a;border:1px solid #222;padding:10px;border-radius:4px;margin-bottom:8px}
+#text-panel{flex:1;min-height:180px;max-height:400px;overflow-y:auto;background:#0f0f0f;border:1px solid #222;border-radius:4px;padding:16px;margin-bottom:12px;display:flex;flex-direction:column-reverse;gap:10px}
+.text-entry{line-height:1.75;font-size:15px}
+.narrative{color:#e8e0d0}
+.dialogue{color:#a8c4d8;font-style:italic}
+.sys{color:#777;font-size:13px}
+.dmg{color:#cc5555}
+.healtxt{color:#44aa44}
+.firetxt{color:#ff8800}
+#combat-log{display:none;background:#080808;border:1px solid #2a2a2a;border-radius:4px;padding:10px;margin-bottom:10px;max-height:150px;overflow-y:auto}
+.clog{font-family:"Courier New",monospace;font-size:12px;line-height:1.5;color:#c8c8c8}
+.clog.p{color:#d4af37}
+.clog.e{color:#cc7777}
+.clog.fx{color:#aaa;font-style:italic}
+#action-panel{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.action-btn{background:#1a1a1a;color:#e8e0d0;border:1px solid #444;padding:10px 16px;font-family:Georgia,serif;font-size:14px;cursor:pointer;border-radius:3px;transition:all 0.15s;flex:1;min-width:130px;text-align:center}
+.action-btn:hover,.action-btn:focus{background:#221d00;border-color:#d4af37;color:#d4af37;outline:none}
+.action-btn:disabled{opacity:0.35;cursor:not-allowed}
+.action-btn.primary{border-color:#d4af37;color:#d4af37}
+.action-btn.danger{border-color:#cc3333;color:#cc5555}
+.action-btn.stance-press{border-color:#aa4444;color:#dd7777;background:#1a0a0a}
+.action-btn.stance-press:hover,.action-btn.stance-press:focus{background:#2a0a0a;border-color:#dd4444;color:#ff9999}
+.action-btn.stance-hold{border-color:#336699;color:#6699cc;background:#0a0f1a}
+.action-btn.stance-hold:hover,.action-btn.stance-hold:focus{background:#0a1530;border-color:#4488bb;color:#88bbee}
+.action-btn.stance-study{border-color:#556633;color:#99bb66;background:#0a100a}
+.action-btn.stance-study:hover,.action-btn.stance-study:focus{background:#101a08;border-color:#77aa44;color:#aad077}
+.action-btn.stance-unleash{border-color:#ff9900;color:#ffcc44;background:#1a1000;font-weight:bold}
+.action-btn.stance-unleash:hover,.action-btn.stance-unleash:focus{background:#2a1800;border-color:#ffcc00;color:#ffee88}
+#combat-status{display:none;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:4px;padding:10px 14px;margin-bottom:8px}
+.enemy-portrait{font-family:"Courier New",monospace;font-size:11px;color:#aa8866;white-space:pre;line-height:1.2;float:right;margin-left:12px}
+.enemy-name-bar{font-family:"Cinzel",serif;font-size:15px;color:#cc7755;margin-bottom:6px}
+.enemy-hp-wrap{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.enemy-hp-bar{flex:1;height:8px;background:#1a1a1a;border-radius:2px;overflow:hidden;border:1px solid #2a2a2a}
+.enemy-hp-fill{height:100%;background:linear-gradient(90deg,#882222,#cc4444);transition:width 0.3s}
+.enemy-hp-text{font-family:"Courier New",monospace;font-size:12px;color:#cc5555;min-width:60px}
+.focus-row{display:flex;align-items:center;gap:6px;margin-top:4px}
+.focus-pip{width:10px;height:10px;border-radius:50%;border:1px solid #446633;background:#1a2a1a;transition:background 0.2s}
+.focus-pip.active{background:#88cc44;border-color:#aae055;box-shadow:0 0 5px #88cc44}
+.combat-hint{font-size:12px;color:#665544;font-style:italic;margin-top:5px;clear:both}
+.round-label{font-family:"Cinzel",serif;font-size:11px;color:#555;text-transform:uppercase;letter-spacing:1px}
+@keyframes dmg-flash{0%{box-shadow:0 0 0 2px #cc3333}60%{box-shadow:0 0 16px 3px #cc3333}100%{box-shadow:none}}
+@keyframes fire-glow{0%{box-shadow:0 0 0 2px #ff8800}60%{box-shadow:0 0 20px 4px #ff8800}100%{box-shadow:none}}
+@keyframes heal-glow{0%{box-shadow:0 0 0 2px #44aa44}60%{box-shadow:0 0 16px 3px #44aa44}100%{box-shadow:none}}
+.anim-damage{animation:dmg-flash 0.4s ease}
+.anim-fire{animation:fire-glow 0.5s ease}
+.anim-heal{animation:heal-glow 0.5s ease}
+.status-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;min-height:18px}
+.spip{font-size:11px;padding:1px 7px;border-radius:10px;font-family:"Courier New",monospace}
+.s-bleeding{background:#330000;color:#ff7777;border:1px solid #883333}
+.s-poisoned{background:#001a00;color:#77ff77;border:1px solid #338833}
+.s-dazed{background:#222200;color:#dddd55;border:1px solid #888800}
+.s-entangled{background:#001100;color:#55cc55;border:1px solid #226622}
+.s-immobilized{background:#110022;color:#bb88ff;border:1px solid #663399}
+.s-terrified{background:#1a0000;color:#ff5555;border:1px solid #880000}
+.title-screen{text-align:center;padding:30px 20px;display:flex;flex-direction:column;align-items:center;gap:18px}
+.game-title{font-family:"Cinzel",serif;font-size:46px;color:#d4af37;letter-spacing:4px;text-shadow:0 0 30px rgba(212,175,55,0.35)}
+.game-subtitle{font-family:"Cinzel",serif;font-size:14px;color:#666;letter-spacing:3px}
+.title-desc{max-width:540px;line-height:1.85;color:#bbb;font-size:15px}
+#overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.88);z-index:200;justify-content:center;align-items:center}
+#overlay.active{display:flex}
+.overlay-box{background:#111;border:1px solid #444;border-radius:6px;padding:24px;max-width:520px;width:90%;max-height:82vh;overflow-y:auto}
+.overlay-box h3{font-family:"Cinzel",serif;color:#d4af37;margin-bottom:14px;font-size:18px}
+.overlay-box p{margin-bottom:10px;line-height:1.7;color:#ccc}
+.overlay-box .dialogue{color:#a8c4d8;font-style:italic;margin-bottom:12px}
+.dead-screen{text-align:center;padding:40px 20px}
+.dead-title{font-family:"Cinzel",serif;font-size:34px;color:#cc3333;margin-bottom:20px;letter-spacing:3px}
+.ending-title{font-family:"Cinzel",serif;font-size:26px;color:#d4af37;margin-bottom:16px;letter-spacing:3px}
+.ending-subtitle{font-family:"Cinzel",serif;font-size:16px;color:#888;margin-bottom:20px}
+.shop-line{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #222;padding:6px 0;font-size:14px}
+.shop-line .item-name{color:#e8e0d0}
+.shop-line .item-cost{color:#d4af37;font-family:"Cinzel",serif;font-size:13px}
+.shop-buy{background:#1a1200;border:1px solid #d4af37;color:#d4af37;padding:3px 10px;cursor:pointer;font-size:12px;border-radius:3px;font-family:Georgia,serif}
+.shop-buy:hover{background:#2a2200}
+.shop-buy:disabled{opacity:0.3;cursor:not-allowed}
+.craft-line{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1a1a1a;padding:6px 0;font-size:13px}
+.inv-line{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1a1a1a;padding:5px 0;font-size:14px}
+.inv-use{background:#1a1a1a;border:1px solid #555;color:#e8e0d0;padding:2px 8px;cursor:pointer;font-size:11px;border-radius:3px}
+.inv-use:hover{border-color:#d4af37;color:#d4af37}
+hr.sep{border:none;border-top:1px solid #222;margin:10px 0}
+</style>
+</head>
+<body>
+<div id="hud">
+  <a href="../games.html" style="font-family:'Cinzel',serif;font-size:11px;color:#888;text-decoration:none;letter-spacing:1px;padding:2px 8px;border:1px solid #333;border-radius:3px;white-space:nowrap" onmouseover="this.style.color='#d4af37';this.style.borderColor='#d4af37'" onmouseout="this.style.color='#888';this.style.borderColor='#333'">&#8592; Games</a>
+  <div class="bar-wrap">
+    <span class="hud-label">HP</span>
+    <div class="bar"><div class="bar-fill hp-fill" id="hp-bar" style="width:100%"></div></div>
+    <span class="hud-stat" id="hp-text">100/100</span>
+  </div>
+  <div class="bar-wrap">
+    <span class="hud-label">Stamina</span>
+    <div class="bar"><div class="bar-fill stamina-fill" id="stamina-bar" style="width:100%"></div></div>
+    <span class="hud-stat" id="stamina-text">50/50</span>
+  </div>
+  <div class="hud-sep">|</div>
+  <div>
+    <span class="hud-label">Brand Heat</span>
+    <div class="heat-dots" id="heat-dots">
+      <div class="heat-dot" id="hd0"></div><div class="heat-dot" id="hd1"></div>
+      <div class="heat-dot" id="hd2"></div><div class="heat-dot" id="hd3"></div>
+      <div class="heat-dot" id="hd4"></div>
+    </div>
+  </div>
+  <div class="hud-sep">|</div>
+  <div><span class="hud-label">Weapon&nbsp;</span><span class="hud-stat" id="hud-weapon">—</span></div>
+  <div><span class="hud-label">Items&nbsp;</span><span class="hud-stat" id="hud-items">0/12</span></div>
+  <div><span class="hud-label">Coin&nbsp;</span><span class="hud-stat" id="hud-coin">0</span></div>
+  <div class="hud-sep">|</div>
+  <div class="bar-wrap" style="min-width:80px">
+    <span class="hud-label">LVL <span id="hud-level">1</span></span>
+    <div class="bar"><div class="bar-fill" id="xp-bar" style="width:0%;background:linear-gradient(90deg,#4466aa,#6688cc)"></div></div>
+    <span class="hud-stat" id="xp-text" style="color:#6688cc">0 XP</span>
+  </div>
+</div>
+<div id="main">
+  <div id="location-header"></div>
+  <div class="status-bar" id="status-bar"></div>
+  <div id="combat-status"></div>
+  <div id="combat-log"></div>
+  <div id="text-panel"></div>
+  <div id="action-panel"></div>
+</div>
+<div id="overlay"><div class="overlay-box" id="overlay-box"></div></div>
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const WEAPONS = {
+  worn_short_sword: { name:"Worn Short Sword", atkMod:0, special:null, fireSynergy:false,
+    desc:"A battered blade that has seen better decades." },
+  crude_knife: { name:"Crude Knife", atkMod:-2, special:"quick_strike", fireSynergy:false,
+    desc:"Ugly and unbalanced, but quick enough in a pinch." },
+  hunters_axe: { name:"Hunter's Axe", atkMod:3, special:"cleave", fireSynergy:false,
+    desc:"Well-made northern axe, balanced for one hand." },
+  guards_blade: { name:"Guard's Blade", atkMod:5, special:"parry", fireSynergy:false,
+    desc:"A proper soldier's sword. Someone lost this far from anywhere." },
+  flame_notched_blade: { name:"Flame-Notched Blade", atkMod:4, special:"fire_channel", fireSynergy:true,
+    desc:"The notches in the blade channel heat from your hands. It hums when you grip it." },
+  poison_blade: { name:"Poison Blade", atkMod:2, special:"venom_edge", fireSynergy:false,
+    desc:"A blade whose edge has been treated with spider venom." }
+};
+const WEAPON_SPECIALS = {
+  quick_strike: { name:"Quick Strike", staminaCost:0, desc:"Attack twice at half power each." },
+  cleave:       { name:"Cleave", staminaCost:0, desc:"Strike all enemies simultaneously." },
+  parry:        { name:"Parry", staminaCost:0, desc:"30% chance to halve incoming damage." },
+  fire_channel: { name:"Fire Channel", staminaCost:15, desc:"Add +8 fire damage. Costs 15 stamina." },
+  venom_edge:   { name:"Venom Edge", staminaCost:0, desc:"Applies Poisoned on hit." }
+};
+
+const ITEMS = {
+  // Medical
+  bandage:          { name:"Bandage",         cat:"medical",    desc:"Restore 15 HP.", count:0 },
+  field_salve:      { name:"Field Salve",      cat:"medical",    desc:"Restore 30 HP. Removes Bleeding.", count:0 },
+  antidote_vial:    { name:"Antidote Vial",    cat:"medical",    desc:"Removes Poisoned immediately.", count:0 },
+  healing_root:     { name:"Healing Root",     cat:"medical",    desc:"Restore 20 HP over 3 rounds.", count:0 },
+  prey_bird_meat:   { name:"Prey Bird Meat",   cat:"medical",    desc:"Restore 10 HP. Cannot use in combat.", count:0 },
+  strong_tonic:     { name:"Strong Tonic",     cat:"medical",    desc:"Restore full HP. Cure all status effects.", count:0 },
+  reinforced_bandage:{ name:"Reinforced Bandage", cat:"medical", desc:"Restore 40 HP.", count:0 },
+  // Consumable
+  oil_flask:        { name:"Oil Flask",        cat:"consumable", desc:"20 fire damage. Instantly destroys Rising.", count:0 },
+  thorn_extract:    { name:"Thorn Extract",    cat:"consumable", desc:"Pre-combat: next attack applies Poisoned+Bleeding.", count:0 },
+  smoke_pellet:     { name:"Smoke Pellet",     cat:"consumable", desc:"Forces immediate combat retreat.", count:0 },
+  torch:            { name:"Torch",            cat:"consumable", desc:"Prevents Dart Ambush. Required for dark rooms.", count:0 },
+  rope_hook:        { name:"Rope & Hook",      cat:"consumable", desc:"Access the hidden upper level of the wayshrine.", count:0 },
+  // Components
+  bear_fat:         { name:"Bear Fat",         cat:"component",  desc:"Crafting component.", count:0 },
+  scrap_cloth:      { name:"Scrap Cloth",      cat:"component",  desc:"Crafting component.", count:0 },
+  feathers:         { name:"Feathers",         cat:"component",  desc:"Crafting component.", count:0 },
+  thorn_extract_component:{ name:"Thorn Component", cat:"component", desc:"2 needed to craft Thorn Extract.", count:0 },
+  venom_sac:        { name:"Venom Sac",        cat:"component",  desc:"Craft into Poison Blade with any blade.", count:0 },
+  dart_quill:       { name:"Dart Quill",       cat:"component",  desc:"Crafting component.", count:0 },
+  hardwood_shard:   { name:"Hardwood Shard",   cat:"component",  desc:"Crafting component.", count:0 },
+  beastman_hide:    { name:"Beastman Hide",    cat:"component",  desc:"Trophy. Dense, dark fur.", count:0 },
+  shine_hoarder_eye:{ name:"Shine Hoarder Eye",cat:"component",  desc:"Iridescent. Valuable.", count:0 },
+  spider_silk:      { name:"Spider Silk",      cat:"component",  desc:"Extremely strong. Crafting component.", count:0 },
+  night_bear_hide:  { name:"Night Bear Hide",  cat:"component",  desc:"Heavy, valuable pelt.", count:0 },
+  beastman_claw_mod:{ name:"Beastman Claw",    cat:"mod",        desc:"+3 attack to equipped weapon. Causes Bleeding on hit.", count:0 }
+};
+
+const ENEMIES = {
+  bandit: {
+    name:"Bandit", hp:30, maxHp:30, atk:6, def:2, xp:20,
+    firstFlavor:"He steps out from behind the waystation wall — road-stained coat, a knife that's more rust than steel. His eyes have the flat calculation of a man who has done this before and never found it interesting.",
+    special:"dirty_strike", loot:[{id:"coin",amt:10},{id:"bandage",amt:1}], canFlee:true, loc:"LOC_01"
+  },
+  crazed_man: {
+    name:"Crazed Man", hp:22, maxHp:22, atk:8, def:0, xp:15,
+    firstFlavor:"He comes out of the brush at a run, eyes too wide, mouth open. Whatever he was before the forest took him, it's been replaced by something rawer. He doesn't speak. He just comes.",
+    special:"frenzy", frenzyRounds:0, loot:[{id:"scrap_cloth",amt:1}], lootExtra:{id:"crude_knife",chance:0.35}, canFlee:true, loc:"LOC_03"
+  },
+  prey_bird_a: {
+    name:"Prey Bird", hp:14, maxHp:14, atk:4, def:1, xp:10,
+    firstFlavor:"Two of them — wingspan wider than you expected, talons already extended. They circle once and then they dive.",
+    special:"dive", diveUsed:false, loot:[{id:"feathers",amt:1}], lootExtra:{id:"prey_bird_meat",chance:0.5}, canFlee:true, loc:"LOC_03",
+    isPair:true, pair: null
+  },
+  prey_bird_b: {
+    name:"Prey Bird (2)", hp:14, maxHp:14, atk:4, def:1, firstFlavor:"", xp:10,
+    special:"dive", diveUsed:false, loot:[{id:"feathers",amt:1}], canFlee:true, loc:"LOC_03"
+  },
+  night_bear: {
+    name:"Night Bear", hp:75, maxHp:75, atk:14, def:6, xp:50,
+    firstFlavor:"It emerges from between the trees without sound — black fur that seems to absorb the remaining light, eyes like two dull coins. A night bear. Rare this far south. That means something has pushed it down from the deep forest.",
+    special:"maul", loot:[{id:"night_bear_hide",amt:1},{id:"bear_fat",amt:1}], canFlee:true, loc:"LOC_03"
+  },
+  overgrown: {
+    name:"Overgrown", hp:55, maxHp:55, atk:11, def:4, xp:35,
+    firstFlavor:"It looks like it was once a man. There are still traces of it — a shape under the bark, fingers that have grown into roots. The forest has taken it entirely. What moves toward you now is not man and not plant. It is something that decided to become both.",
+    special:"entangle", loot:[{id:"thorn_extract_component",amt:1},{id:"hardwood_shard",amt:1}], canFlee:false, loc:"LOC_03"
+  },
+  lingering_spirit: {
+    name:"Lingering Spirit", hp:35, maxHp:35, atk:9, def:0, xp:25,
+    firstFlavor:"It coalesces from the shadows at the edge of the camp — a shape that is almost a person, almost still. It doesn't speak. The cold coming off it is immediate and total. Your fire responds, pulling toward it.",
+    special:"wail_drain", immunePhysical:true, loot:[], grantsSettled:true, canFlee:false, loc:"LOC_04"
+  },
+  giant_spider: {
+    name:"Giant Spider", hp:45, maxHp:45, atk:10, def:3, xp:30,
+    firstFlavor:"The web caught the light before you saw the spider. It drops from the canopy — body the size of a dog, legs spanning wider. The abdomen pulses with venom. It assesses you with eight flat eyes and decides you are prey.",
+    special:"venom_web", loot:[{id:"spider_silk",amt:1},{id:"venom_sac",amt:1}], canFlee:true, loc:"LOC_05"
+  },
+  dart: {
+    name:"Dart", hp:18, maxHp:18, atk:7, def:2, xp:15,
+    firstFlavor:"You heard nothing. The first sign of it is the impact — a creature about the size of a cat, all spine and speed, its quills already raised. If you'd had your torch out, you would have seen it in time.",
+    special:"ambush", ambushUsed:false, loot:[{id:"dart_quill",amt:1}], canFlee:true, loc:"LOC_05"
+  },
+  shine_hoarder: {
+    name:"Shine Hoarder", hp:60, maxHp:60, atk:13, def:5, xp:45,
+    firstFlavor:"The chamber is full of things that catch light — coins, shards of mirror, the bones of birds. In the center of it, the creature that collected all this turns toward you. It's blind. It doesn't need eyes. It can feel the heat of you.",
+    special:"blind_hoard", flashUsed:false, loot:[{id:"coin",amt:40},{id:"shine_hoarder_eye",amt:1},{id:"strong_tonic",amt:1}], lootWeapon:"flame_notched_blade", canFlee:true, loc:"LOC_05"
+  },
+  beastman: {
+    name:"Beastman", hp:90, maxHp:90, atk:18, def:7, xp:60,
+    firstFlavor:"It's larger than a man. The proportions are wrong in ways that take a moment to catalogue — arms too long, head too heavy, a spine that bends in two directions. It regards you with the calm of a creature that has not yet met anything it could not kill.",
+    special:"rend_terrify", loot:[{id:"beastman_claw_mod",amt:1}], canFlee:false, loc:"LOC_05"
+  },
+  beastman_named: {
+    name:"Grath", hp:140, maxHp:140, atk:18, def:7, xp:90,
+    firstFlavor:"This one has a name. You can feel it the way you can feel certain silences — weighted, intentional. It is larger than the others and it has been here longer. The corruption around the shrine bends toward it slightly, like a plant toward heat. It looks at you without surprise, as though it has been expecting exactly this.",
+    special:"rend_terrify_named", terrifyUsed:false, loot:[{id:"beastman_hide",amt:1},{id:"coin",amt:20}], grantsFlag:"destroyedShrine", canFlee:false, loc:"LOC_06"
+  },
+  rising: {
+    name:"The Rising", hp:50, maxHp:50, atk:12, def:0, xp:40,
+    firstFlavor:"It unfolds from the base of the shrine like smoke that learned to move with purpose. No eyes. No mouth. Just a shape that moves toward heat — toward you — and does not stop.",
+    special:"reforms", hasReformed:false, immunePhysical:false, loot:[], grantsFlag:"risingDefeated", canFlee:false, loc:"LOC_06"
+  }
+};
+
+const ASCII_ART = {
+  LOC_01:`       ___
+      /___\\
+     | [=] |
+     |_____|
+    /|     |\\
+   / |  W  | \\
+  /  |_____|  \\
+     WAYSTATION`,
+  LOC_02:`  ___   ___   ___
+ |H  | |A  | |R  |
+ |___| |___| |___|
+ |  HARROW'S    |
+ |   CROSSING   |
+  \\__VILLAGE___/`,
+  LOC_03:` |  |  |  |  |  |
+ | /|\\ /|\\ /|\\ |
+ |/ | X | X |\\|
+ | LOGGING ROAD |
+  \\____________/`,
+  LOC_04:`  . *  camp  * .
+ [====][====]
+ |    ||    |
+ |EDGE|| CAMP
+ |____||____|
+   *  .  * .`,
+  LOC_05:` Y  Y  Y  Y  Y  Y
+/|\\/|\\/|\\/|\\/|\\
+ |  THE  DEEP  |
+ |   FOREST    |
+  \\  ancient /
+   \\________/`,
+  LOC_06:`    _____
+   /\\   /\\
+  /  \\ /  \\
+ | RUINED   |
+ | WAYSHRINE|
+  \\  ___  /
+   \\/___\\/`
+};
+
+const LOCATION_DATA = {
+  LOC_01: {
+    name:"The Waystation",
+    firstDesc:"The waystation is a squat thing of grey stone, built for practicality and nothing else. An oil lamp hangs from the eave, guttering in the evening wind. Three roads meet here — south to the city, east to the coast, north to wherever the trees get thick enough to swallow the light. You've been sitting on the bench outside for the better part of an hour, eating stale bread and watching the road, when you see her coming. She's moving fast. Too fast for someone who has been walking.",
+    shortDesc:"The waystation crossroads. The evening wind hasn't changed."
+  },
+  LOC_02: {
+    name:"Harrow's Crossing",
+    firstDesc:"Harrow's Crossing is the kind of village that apologizes for existing. The buildings are low and practical, built from the same timber the loggers send south. The streets are mud. The people who pass you keep their eyes down. They know what you are — your hands give it away when the light catches them wrong, that faint shimmer under the skin. They don't run. They just make themselves smaller. Elder Maren is waiting for you at the longhouse door. She looks like she hasn't slept in a week.",
+    shortDesc:"Harrow's Crossing. The village is quiet in the way of held breath."
+  },
+  LOC_03: {
+    name:"The Logging Road",
+    firstDesc:"The logging road north is older than the village that maintains it. Trees crowd close on both sides, their branches interlocking overhead to form a tunnel of bark and shadow. The ruts from wagon wheels are deep here, filled with standing water that reflects nothing. Somewhere ahead, beyond where the loggers work, the road simply stops. No one has gone past the old boundary stakes in two months.",
+    shortDesc:"The logging road stretches north into growing dark."
+  },
+  LOC_04: {
+    name:"The Edge Camp",
+    firstDesc:"The edge camp was abandoned recently enough that the fire ring still has ash in it. Whoever left did so in a hurry — packs lean against stumps, a cookpot with something dried and black in the bottom, a lantern with oil still in the reservoir. At the tree line, barely visible in the failing light, there is a shape that does not move the way branches move. It watches you. You feel it watching you. This place is not empty.",
+    shortDesc:"The edge camp. The cold here is different from ordinary cold."
+  },
+  LOC_05: {
+    name:"The Deep Forest",
+    firstDesc:"Past the edge camp, the forest changes. The trees are older here — bark dark and smooth, canopy so thick that midday looks like dusk. The undergrowth is dense and strange, plants you have no names for growing in configurations that seem deliberate. Sound is wrong in here too. The birds that were calling behind you have gone silent. Your fire stirs inside you without prompting, responding to something it can sense that you cannot yet see.",
+    shortDesc:"The deep forest presses in on all sides. Your fire stirs uneasily."
+  },
+  LOC_06: {
+    name:"The Ruined Wayshrine",
+    firstDesc:"The wayshrine has been here longer than the forest. The stone is different from anything quarried locally — grey-white and faintly luminous, carved with symbols that have worn to shadows of themselves. The god whose name was once cut into the lintel is gone now, worn to nothing. The corruption is visible even to ordinary eyes: a dark discoloration spreading from the shrine's base like spilled ink, killing whatever it touches. The air tastes like metal. Something is centered here. Something that has been waiting.",
+    shortDesc:"The ruined wayshrine. The corruption pulses at its base."
+  }
+};
+
+const SHOP_VAYNE = [
+  { id:"bandage",       name:"Bandage",       cost:8,  stock:999, desc:"Restore 15 HP." },
+  { id:"field_salve",   name:"Field Salve",   cost:18, stock:4,   desc:"Restore 30 HP + cure Bleeding." },
+  { id:"antidote_vial", name:"Antidote Vial", cost:12, stock:3,   desc:"Remove Poisoned." }
+];
+const SHOP_HOLT = [
+  { id:"hunters_axe",  name:"Hunter's Axe",  cost:30, stock:1, desc:"Atk +3. Cleave: hits all enemies." },
+  { id:"guards_blade", name:"Guard's Blade", cost:50, stock:1, desc:"Atk +5. Parry: 30% halve damage." },
+  { id:"oil_flask",    name:"Oil Flask",     cost:12, stock:3, desc:"20 fire damage. Destroys Rising." }
+];
+const SHOP_MERCHANT = [
+  { id:"smoke_pellet", name:"Smoke Pellet", cost:10, stock:2, desc:"Escape from any combat." }
+];
+
+const CRAFTING_RECIPES = [
+  { id:"field_salve_craft",   name:"Field Salve",        needs:[{id:"bear_fat",n:1},{id:"scrap_cloth",n:1}], result:{id:"field_salve",n:1} },
+  { id:"thorn_extract_craft", name:"Thorn Extract",      needs:[{id:"thorn_extract_component",n:2}],         result:{id:"thorn_extract",n:1} },
+  { id:"reinforced_bandage",  name:"Reinforced Bandage", needs:[{id:"bandage",n:2},{id:"scrap_cloth",n:1}],  result:{id:"reinforced_bandage",n:1} },
+  { id:"poison_blade_craft",  name:"Poison Blade",       needs:[{id:"venom_sac",n:1}], requiresBlade:true,   result:{id:"poison_blade",n:0} }
+];
+
+// ============================================================
+// ENEMY PORTRAITS & COMBAT HINTS
+// ============================================================
+const ENEMY_PORTRAITS = {
+  bandit:
+`  _O_
+ /| |\
+  | |
+ / \\`,
+  crazed_man:
+` \\O/
+  |
+ _|_`,
+  prey_bird_a:
+`  /\\  /\\
+ (  \\/  )
+  \\    /
+   \\__/`,
+  night_bear:
+`  /\\_/\\
+ ( o o )
+ =( Y )=
+  )   (`,
+  overgrown:
+` \\|/ \\|/
+--*---*--
+ /|\\Y/|\\
+  | | |`,
+  lingering_spirit:
+`  ~ * ~
+ *  |  *
+~  |||  ~
+ * ~~~ *`,
+  giant_spider:
+` \\ | | /
+--( . )--
+ / | | \\
+   ===`,
+  dart:
+` |> . <|
+  \\___/
+  |___|`,
+  shine_hoarder:
+` o * o *
+* (___) *
+ o _|_ o
+  /   \\`,
+  beastman:
+`  /\\  /\\
+ / O  O \\
+|   /\\   |
+ \\_|  |_/`,
+  beastman_named:
+` /\\ ** /\\
+( O    O )
+|  >--<  |
+ \\_\\  /_/`,
+  rising:
+` ~ ~ ~ ~
+~  ~~~  ~
+ ~ ~~~ ~
+~ ~ ~ ~ ~`
+};
+
+const COMBAT_HINTS = {
+  bandit:       "He's quick but brittle. Overwhelming aggression won't give him time to recover.",
+  crazed_man:   "He gets worse the longer this goes. End it fast — patience will cost you.",
+  prey_bird_a:  "It moves unpredictably. Hold your ground and let it come to you.",
+  night_bear:   "Brute force won't work here. Study its patterns; strike when it overcommits.",
+  overgrown:    "It can root you. Stay patient, keep your footing, wear it down slowly.",
+  lingering_spirit: "Steel does nothing. Your heat is the only weapon here — don't hold back.",
+  giant_spider: "It will try to poison and web you. Defensive pressure buys time to counter.",
+  dart:         "Small and fast. Aggression may keep it off-balance before it can ambush again.",
+  shine_hoarder:"It's blind but sensitive. Patient strikes avoid triggering its hoard instincts.",
+  beastman:     "It hits hard and it's fast. Hold your line — don't let it dictate the pace.",
+  beastman_named:"Grath has seen warriors before. Read it carefully. One wrong move is fatal.",
+  rising:       "Fire only. Physical force will not hold it down. Every heat blast counts."
+};
+
+// ============================================================
+// GAME STATE
+// ============================================================
+const XP_PER_LEVEL = [0, 30, 80, 150, 240]; // xp needed to reach levels 2,3,4,5
+const MAX_LEVEL = 5;
+
+let G = {
+  player: {
+    hp:100, maxHp:100, stamina:50, maxStamina:50,
+    inventory:{}, equippedWeapon:"worn_short_sword",
+    statusEffects:[], brandedHeat:0, coin:15,
+    healingRootTicks:0, thornActive:false, beastmanClawMod:false,
+    parryActive:false, settledBonus:false,
+    level:1, xp:0
+  },
+  world: { currentLocationId:"title", visitedLocations:[], loc03Traversals:0, loc05RoomsVisited:[] },
+  story: {
+    flags:{
+      trustedElder:false, alliedCreature:false, destroyedShrine:false,
+      warnedCapital:false, spiritDefeated:false, rampageChosen:false,
+      buriedLeadFound:false, holtLoreHeard:false, vayneLoreHeard:false,
+      creatureNegotiated:false, ropeHookFound:false,
+      resolveCheck1Passed:false, resolveCheck2Passed:false,
+      risingDefeated:false, merchantVisited:false, ida_met:false,
+      maren_met:false, holt_met:false, vayne_met:false, creature_met:false,
+      shinehoarder_defeated:false, nightbear_defeated:false,
+      loc04_searched:false, loc04_rested:false, loc05_foraged:0,
+      loc03_enc_count:0, waystationShopDone:false,
+      creatureAliveAfterFight:false, grath_defeated:false
+    }
+  },
+  combat: { active:false, enemy:null, round:0, log:[], firstEncounterSeen:{}, focus:0, chargeWarning:false }
+};
+
+function inv(id){ return G.player.inventory[id]||0; }
+function setInv(id,n){ if(n<=0){delete G.player.inventory[id];}else{G.player.inventory[id]=n;} }
+function addInv(id,n){
+  const total = invCount() + n;
+  if(total > 12){ addText("Your pack is full (12 item limit). Drop something first.","sys"); return false; }
+  setInv(id, inv(id)+n);
+  return true;
+}
+function invCount(){ return Object.values(G.player.inventory).reduce((a,b)=>a+b,0); }
+
+// ============================================================
+// HUD & RENDER UTILITIES
+// ============================================================
+function updateHUD(){
+  const p = G.player;
+  document.getElementById("hp-bar").style.width = Math.max(0,(p.hp/p.maxHp)*100)+"%";
+  document.getElementById("hp-text").textContent = p.hp+"/"+p.maxHp;
+  document.getElementById("stamina-bar").style.width = Math.max(0,(p.stamina/p.maxStamina)*100)+"%";
+  document.getElementById("stamina-text").textContent = p.stamina+"/"+p.maxStamina;
+  document.getElementById("hud-coin").textContent = p.coin;
+  document.getElementById("hud-items").textContent = invCount()+"/12";
+  document.getElementById("hud-weapon").textContent = WEAPONS[p.equippedWeapon]?.name||"—";
+  document.getElementById("hud-level").textContent = p.level;
+  if(p.level < MAX_LEVEL){
+    const xpNeeded = XP_PER_LEVEL[p.level];
+    document.getElementById("xp-bar").style.width = Math.min(100,(p.xp/xpNeeded)*100)+"%";
+    document.getElementById("xp-text").textContent = p.xp+"/"+xpNeeded+" XP";
+  } else {
+    document.getElementById("xp-bar").style.width = "100%";
+    document.getElementById("xp-text").textContent = "MAX";
+  }
+  for(let i=0;i<5;i++){
+    const d = document.getElementById("hd"+i);
+    d.classList.toggle("active", i < p.brandedHeat);
+  }
+  // status bar
+  const sb = document.getElementById("status-bar");
+  sb.innerHTML = "";
+  p.statusEffects.forEach(s=>{
+    const pip = document.createElement("span");
+    pip.className = "spip s-"+s.id;
+    pip.textContent = s.name+(s.rounds?" ("+s.rounds+")":"");
+    sb.appendChild(pip);
+  });
+}
+
+function addText(text, cls="narrative"){
+  const panel = document.getElementById("text-panel");
+  const div = document.createElement("div");
+  div.className = "text-entry "+cls;
+  div.innerHTML = text;
+  panel.prepend(div);
+}
+
+function clearText(){ document.getElementById("text-panel").innerHTML = ""; }
+
+function setActions(buttons){
+  const panel = document.getElementById("action-panel");
+  panel.innerHTML = "";
+  buttons.forEach((b,i)=>{
+    const btn = document.createElement("button");
+    btn.className = "action-btn"+(b.primary?" primary":"")+(b.danger?" danger":"")+(b.cls?" "+b.cls:"");
+    btn.textContent = b.label;
+    if(b.disabled) btn.disabled = true;
+    btn.onclick = b.fn;
+    btn.setAttribute("tabindex","0");
+    panel.appendChild(btn);
+    if(i===0) btn.focus();
+  });
+}
+
+function triggerAnim(cls){
+  const tp = document.getElementById("text-panel");
+  tp.classList.remove("anim-damage","anim-fire","anim-heal");
+  void tp.offsetWidth;
+  tp.classList.add(cls);
+  setTimeout(()=>tp.classList.remove(cls),600);
+}
+
+function addCombatLog(text, cls=""){
+  const log = document.getElementById("combat-log");
+  const div = document.createElement("div");
+  div.className = "clog"+(cls?" "+cls:"");
+  div.textContent = text;
+  log.prepend(div);
+  // keep last 10
+  while(log.children.length > 10) log.removeChild(log.lastChild);
+}
+
+function showLocationHeader(locId){
+  const hdr = document.getElementById("location-header");
+  const loc = LOCATION_DATA[locId];
+  if(!loc){ hdr.innerHTML=""; return; }
+  hdr.innerHTML = `<div class="loc-name">${loc.name}</div>`
+    + (ASCII_ART[locId]?`<pre class="ascii-art">${ASCII_ART[locId]}</pre>`:"");
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function goToLocation(id){
+  const wasVisited = G.world.visitedLocations.includes(id);
+  G.world.currentLocationId = id;
+  if(!wasVisited) G.world.visitedLocations.push(id);
+
+  document.getElementById("combat-log").style.display = "none";
+  document.getElementById("combat-log").innerHTML = "";
+  document.getElementById("combat-status").style.display = "none";
+  clearText();
+  showLocationHeader(id);
+  updateHUD();
+
+  const loc = LOCATION_DATA[id];
+  if(loc){
+    addText(wasVisited ? loc.shortDesc : loc.firstDesc);
+  }
+  // Route to location handler
+  const handlers = {
+    title: showTitle, LOC_01: showLoc01, LOC_02: showLoc02,
+    LOC_03: showLoc03, LOC_04: showLoc04, LOC_05: showLoc05, LOC_06: showLoc06
+  };
+  if(handlers[id]) handlers[id](wasVisited);
+}
+
+// ============================================================
+// TITLE SCREEN
+// ============================================================
+function showTitle(){
+  document.getElementById("location-header").innerHTML =
+    `<div class="title-screen">
+      <div class="game-title">THE ASHEN ROAD</div>
+      <div class="game-subtitle">Destiny's Champion Universe &nbsp;·&nbsp; 500 Years Before Canon</div>
+      <div class="title-desc">The gods have gone silent. No one knows why. The temples still stand. The priests still pray. No answer comes.<br><br>In the Kingdom of Anakey, at the northern edge of the Forest Kingdom, something has begun to move in the dark between the trees.<br><br>You are Kaeso — a Branded warrior, a man who carries fire in his blood. You go where no one else will go.</div>
+    </div>`;
+  document.getElementById("text-panel").innerHTML="";
+  setActions([{ label:"Begin →", primary:true, fn:()=>goToLocation("LOC_01") }]);
+}
+
+// ============================================================
+// LOC_01: THE WAYSTATION
+// ============================================================
+function showLoc01(wasVisited){
+  if(!wasVisited){
+    addText('<b>Runner Ida</b> stops in front of you, breathing hard. She holds out a folded note. "Harrow\'s Crossing," she says. "Two months of disappearances. Eleven men went north. None came back. The elder is offering the communal chest — not much, but she said you\'d come."<br><br>You take the note. She\'s right. You were going to go anyway. You always go.','dialogue');
+    G.story.flags.ida_met = true;
+  }
+  const actions = [
+    { label:"Speak with Runner Ida", fn:()=>dialogIda() },
+    { label:"Visit the merchant", fn:()=>openMerchant() },
+  ];
+  if(!G.story.flags.waystationShopDone){
+    actions.push({ label:"Head north to Harrow's Crossing", fn:()=>startBanditEncounter() });
+  } else {
+    actions.push({ label:"Head north to Harrow's Crossing", fn:()=>goToLocation("LOC_02") });
+  }
+  setActions(actions);
+}
+
+function dialogIda(){
+  addText('"I ran two days straight," Ida says. "The elder said not to come back without someone. You\'re the only sell-sword at the waystation." She pauses. "There\'s fire under your skin. I can see it." She doesn\'t look afraid. Just tired. "The village is going to run out of people before it runs out of reasons to be afraid."','dialogue');
+  setActions([
+    { label:'"What else did you see?"', fn:()=>{ addText('"I didn\'t go north," she says. "I didn\'t want to see what the others didn\'t come back from."','dialogue'); showLoc01Actions(); } },
+    { label:'"I\'ll leave at dawn."', fn:()=>{ addText('"Tonight," she says. "Please."','dialogue'); showLoc01Actions(); } }
+  ]);
+}
+
+function showLoc01Actions(){
+  setActions([
+    { label:"Visit the merchant", fn:()=>openMerchant() },
+    { label:"Head north to Harrow's Crossing", fn:()=>startBanditEncounter() }
+  ]);
+}
+
+function openMerchant(){
+  G.story.flags.merchantVisited = true;
+  showShop("Waystation Merchant", SHOP_MERCHANT, ()=>showLoc01(true));
+}
+
+function startBanditEncounter(){
+  addText("You're barely a hundred yards up the northern road when a man steps out of the ditch. He's got a knife and the expression of someone who has made a decision he can't take back.");
+  startCombat("bandit", ()=>{
+    G.story.flags.waystationShopDone = true;
+    addText("You take his coin. He took the wrong contract tonight.");
+    goToLocation("LOC_02");
+  }, ()=>{
+    G.story.flags.waystationShopDone = true;
+    goToLocation("LOC_02");
+  });
+}
+
+// ============================================================
+// LOC_02: HARROW'S CROSSING
+// ============================================================
+function showLoc02(wasVisited){
+  const actions = [
+    { label:"Speak with Elder Maren", fn:()=>dialogMaren() },
+    { label:"Visit Holt's Smithy", fn:()=>dialogHolt() },
+    { label:"Visit Sister Vayne", fn:()=>dialogVayne() },
+    { label:"Head north on the logging road", primary:true, fn:()=>{ G.world.loc03Traversals++; goToLocation("LOC_03"); } },
+    { label:"Inventory / Craft (I)", fn:()=>openInventory(()=>showLoc02(true)) }
+  ];
+  setActions(actions);
+}
+
+function dialogMaren(){
+  G.story.flags.maren_met = true;
+  if(!G.story.flags.trustedElder && !G.story.flags.buriedLeadFound){
+    addText('<b>Elder Maren</b> is a tall woman built for hard weather. She looks at your hands first — the shimmer — and then at your face. "You came," she says. "Good. People have been vanishing for two months. First one at a time, then in groups. Eleven of our loggers went north to find out why. None returned."<br><br>She slides a purse across the table. Light, but it\'s there. "Find what\'s happening. Stop it if you can. That\'s all I\'m asking."','dialogue');
+    setActions([
+      { label:'"What aren\'t you telling me?"', fn:()=>marenBuriedLead() },
+      { label:'"I\'ll head north immediately."', fn:()=>{ G.story.flags.trustedElder=true; addText("You take the purse. Simple contract, she seems to think. You've learned to be skeptical of simple contracts."); addInv("coin_story",0); G.player.coin+=20; updateHUD(); showLoc02(true); } }
+    ]);
+  } else {
+    addText('"The village is counting on you," Maren says. She looks north, through the wall, as though she can see something.','dialogue');
+    setActions([{ label:"Leave", fn:()=>showLoc02(true) }]);
+  }
+}
+
+function marenBuriedLead(){
+  G.story.flags.buriedLeadFound = true;
+  addText('<b>Maren</b> is quiet for a long moment. Then: "There\'s a shrine. Old one, up in the deep forest. Used to be a waypoint for pilgrims, before the god it was built for went silent like the others. The men who went north, the last one who came back before he died — he said the trail led toward the shrine. I didn\'t want to put that in the message. People panic."<br><br>She meets your eyes. "I\'m sorry I didn\'t say it first."','dialogue');
+  G.player.coin += 20;
+  updateHUD();
+  setActions([
+    { label:'"Thank you for telling me."', fn:()=>{ addText("She nods once. There's relief in it."); showLoc02(true); } },
+    { label:'"You should have told me upfront."', fn:()=>{ addText("\"I know,\" she says. \"You're right.\""); showLoc02(true); } }
+  ]);
+}
+
+function dialogHolt(){
+  G.story.flags.holt_met = true;
+  addText('<b>Holt</b> is a wide man with forge-scarred hands and an economy of expression that suggests he finds most conversations suboptimal. He looks at your current blade, then at his stock, then back at you.','dialogue');
+  const actions = [{ label:"Browse weapons", fn:()=>showShop("Holt's Smithy", SHOP_HOLT, ()=>showLoc02(true)) }];
+  if(!G.story.flags.holtLoreHeard){
+    actions.push({ label:'"What do you know about the old shrine?"', fn:()=>holtLore() });
+  }
+  actions.push({ label:"Leave", fn:()=>showLoc02(true) });
+  setActions(actions);
+}
+
+function holtLore(){
+  G.story.flags.holtLoreHeard = true;
+  addText('"My grandfather\'s grandfather knew the pilgrim road," Holt says, without looking up from the blade he\'s working. "They say the god of that shrine was one of the judge gods — the ones who kept the balance. When the judge gods went quiet, they didn\'t just stop answering. Something came out of the silence." He sets down his hammer. "Bad things live in empty holy places. Don\'t let it touch you."','dialogue');
+  setActions([{ label:"Thank him", fn:()=>dialogHolt() }]);
+}
+
+function dialogVayne(){
+  G.story.flags.vayne_met = true;
+  addText('<b>Sister Vayne</b> is younger than you expected for a village healer — late twenties, with the kind of eyes that have seen too much too fast. She\'s nervous around you. Not hostile. Just nervous. She keeps her hands busy arranging her stock.','dialogue');
+  const actions = [{ label:"Buy medical supplies", fn:()=>showShop("Sister Vayne's Stores", SHOP_VAYNE, ()=>showLoc02(true)) }];
+  if(!G.story.flags.vayneLoreHeard){
+    actions.push({ label:'"What do you know about the edge camp?"', fn:()=>vayneLore() });
+  }
+  actions.push({ label:"Leave", fn:()=>showLoc02(true) });
+  setActions(actions);
+}
+
+function vayneLore(){
+  G.story.flags.vayneLoreHeard = true;
+  addText('"The edge camp?" She stops fussing with the jars. "The last logger who came back — before he died — he said there was something at the camp. Not a creature. A person, almost. He said it felt like cold grief." She pauses. "I think it\'s one of the men who didn\'t come back. I think whatever happened to them left something behind. If you go there... be careful with fire. Real fire, not the cold things." She glances at your hands meaningfully.','dialogue');
+  setActions([{ label:"Leave", fn:()=>dialogVayne() }]);
+}
+
+// ============================================================
+// LOC_03: THE LOGGING ROAD
+// ============================================================
+function showLoc03(wasVisited){
+  const t = G.world.loc03Traversals;
+  addText("The boundary stakes are behind you now. The tree cover thickens. You watch the shadows between the trunks.");
+  // Pick encounters
+  const enc = [];
+  if(t <= 1){
+    enc.push("crazed_man", Math.random()<0.4?"prey_bird_pair":"overgrown");
+  } else if(t <= 2){
+    enc.push("overgrown", Math.random()<0.25?"night_bear":"crazed_man");
+  } else {
+    enc.push("overgrown", "overgrown");
+  }
+  runRoadEncounters(enc.slice(), ()=>goToLocation("LOC_04"));
+}
+
+function runRoadEncounters(queue, onDone){
+  if(queue.length===0){ onDone(); return; }
+  const next = queue.shift();
+  if(next==="prey_bird_pair"){
+    addText("Two large shadows pass overhead — then fold into dives.");
+    // treat as two-enemy encounter using just bird_a for simplicity
+    startCombat("prey_bird_a", ()=>runRoadEncounters(queue, onDone), ()=>onDone());
+  } else {
+    startCombat(next, ()=>runRoadEncounters(queue, onDone), ()=>onDone());
+  }
+}
+
+// ============================================================
+// LOC_04: THE EDGE CAMP
+// ============================================================
+function showLoc04(wasVisited){
+  const actions = [];
+  if(!G.story.flags.spiritDefeated && !wasVisited){
+    addText("The shape at the tree line drifts closer. The cold deepens. Whatever this is, it's not going to let you rest without answering for it.");
+    actions.push({ label:"Face the spirit", primary:true, fn:()=>faceSpirit() });
+    actions.push({ label:"Speak to it", fn:()=>spiritAttemptSpeak() });
+  } else {
+    if(G.story.flags.spiritDefeated && !wasVisited){
+      addText("With the spirit gone, the camp feels merely abandoned instead of haunted. You search it carefully.");
+    }
+    if(!G.story.flags.loc04_searched){
+      actions.push({ label:"Search the camp", fn:()=>searchLoc04() });
+    }
+    if(!G.story.flags.loc04_rested){
+      actions.push({ label:"Rest here (restore 30 HP)", fn:()=>restLoc04() });
+    }
+    actions.push({ label:"Continue north into the forest", fn:()=>goToLocation("LOC_05") });
+    actions.push({ label:"Return south", fn:()=>goToLocation("LOC_03") });
+  }
+  setActions(actions);
+}
+
+function spiritAttemptSpeak(){
+  addText("You hold your hands up, the fire in your palms visible and controlled. The spirit stops. But it does not speak. It only radiates something you could call grief if grief were cold enough to crack stone. Then it moves.");
+  faceSpirit();
+}
+
+function faceSpirit(){
+  startCombat("lingering_spirit", ()=>{
+    G.story.flags.spiritDefeated = true;
+    addText("The spirit disperses. The cold lifts. Something settles — in the camp, and in you. You feel steadier. More certain of what you carry.");
+    G.player.maxHp += 5;
+    G.player.hp = Math.min(G.player.hp+5, G.player.maxHp);
+    G.player.settledBonus = true;
+    updateHUD();
+    showLoc04(true);
+  }, ()=>goToLocation("LOC_02"));
+}
+
+function searchLoc04(){
+  G.story.flags.loc04_searched = true;
+  addText("You find a lantern still full of oil, a spare torch, and a stoppered bottle of oil set aside from the rest. Useful. Someone planned to be here a while.");
+  addInv("torch",1);
+  addInv("oil_flask",1);
+  updateHUD();
+  showLoc04(true);
+}
+
+function restLoc04(){
+  G.story.flags.loc04_rested = true;
+  const healed = Math.min(30, G.player.maxHp - G.player.hp);
+  G.player.hp = Math.min(G.player.hp+30, G.player.maxHp);
+  addText("You sleep badly but you sleep. When you wake the fire has burned down and you feel marginally more human. (+"+healed+" HP)","healtxt");
+  triggerAnim("anim-heal");
+  updateHUD();
+  showLoc04(true);
+}
+
+// ============================================================
+// LOC_05: THE DEEP FOREST
+// ============================================================
+function showLoc05(wasVisited){
+  const visited = G.world.loc05RoomsVisited;
+  const actions = [];
+
+  if(!visited.includes("spider")){ actions.push({ label:"Follow the web trail east", fn:()=>loc05Spider() }); }
+  if(!visited.includes("dart")){ actions.push({ label:"Press deeper along the main path", fn:()=>loc05Dart() }); }
+  if(!visited.includes("beastman")){ actions.push({ label:"Investigate the clearing ahead", fn:()=>loc05Beastman() }); }
+  if(!visited.includes("creature")){ actions.push({ label:"Something watches from the shadows...", fn:()=>loc05Creature() }); }
+  if(!visited.includes("shine_hoarder")){ actions.push({ label:"Investigate the glittering chamber (optional)", fn:()=>loc05ShineHoarder() }); }
+
+  if(visited.includes("beastman") && visited.includes("creature")){
+    actions.push({ label:"Head to the wayshrine", primary:true, fn:()=>goToLocation("LOC_06") });
+  }
+  actions.push({ label:"Forage for healing root", fn:()=>loc05Forage(), disabled: G.story.flags.loc05_foraged>=2 });
+  actions.push({ label:"Inventory / Craft (I)", fn:()=>openInventory(()=>showLoc05(true)) });
+  actions.push({ label:"Return to edge camp", fn:()=>goToLocation("LOC_04") });
+
+  setActions(actions);
+}
+
+function loc05Spider(){
+  G.world.loc05RoomsVisited.push("spider");
+  addText("The web comes first — gossamer threads spanning three trees, then thicker cables, then the spider itself dropping from the canopy. You catch a glimpse of a rope and hook coiled near the base of the anchor tree before it moves.");
+  if(!G.story.flags.ropeHookFound){
+    addText("You grab the rope and hook before the spider blocks access.", "healtxt");
+    G.story.flags.ropeHookFound = true;
+    addInv("rope_hook",1);
+    updateHUD();
+  }
+  startCombat("giant_spider", ()=>{
+    addText("You claim its silk and the venom sac, if you're careful about it.");
+    showLoc05(true);
+  }, ()=>showLoc05(true));
+}
+
+function loc05Dart(){
+  G.world.loc05RoomsVisited.push("dart");
+  const hasTorch = inv("torch") > 0;
+  if(hasTorch){
+    addText("Your torch catches the reflection of eyes ahead — low to the ground, wrong color. You see it before it sees you ready. The dart creature hisses and attacks, but you were prepared.");
+  } else {
+    addText("The ambush is perfect. Something hits you from the side — you don't see it until it's already done the damage.");
+  }
+  startCombat("dart", ()=>showLoc05(true), ()=>showLoc05(true), !hasTorch);
+}
+
+function loc05Beastman(){
+  G.world.loc05RoomsVisited.push("beastman");
+  addText("The clearing is thirty feet wide. A beastman is crouched at its center over something that was, recently, an elk. It stands when it hears you. It is larger than the descriptions made it sound.");
+  // Resolve Check 1
+  resolveCheck1(()=>{
+    startCombat("beastman", ()=>{
+      addText("It falls. The clearing is quiet again. Your fire settles, though it took a moment.");
+      if(!G.story.flags.beastmanClawAdded){
+        G.story.flags.beastmanClawAdded=true;
+        addInv("beastman_claw_mod",1);
+        addText("You take the creature's claw from its hand. It could be fitted to a blade.","sys");
+        updateHUD();
+      }
+      showLoc05(true);
+    }, ()=>showLoc05(true));
+  });
+}
+
+function resolveCheck1(onComplete){
+  addText("As the beastman rises to its full height, something cold passes through you. Your fire answers it — a surge of heat up your spine, involuntary, bright. You have a choice in that moment.");
+  setActions([
+    { label:"Control it. Channel it. (Resolve holds)", primary:true, fn:()=>{
+      G.story.flags.resolveCheck1Passed = true;
+      G.player.maxHp = Math.min(G.player.maxHp+5, 130);
+      addText("You hold the fire steady. It listens to you. The moment passes and you are still you. (+5 max HP)","healtxt");
+      updateHUD();
+      onComplete();
+    }},
+    { label:"Let it spike. Just for a second.", fn:()=>{
+      addText("The spike costs you. Your hands char slightly and you lose a moment of focus — the beastman closes the distance while you're still recovering.","dmg");
+      G.player.statusEffects.push({id:"dazed",name:"Dazed",rounds:1});
+      updateHUD();
+      onComplete();
+    }}
+  ]);
+}
+
+function loc05Creature(){
+  G.world.loc05RoomsVisited.push("creature");
+  if(G.story.flags.creature_met){ showLoc05(true); return; }
+  G.story.flags.creature_met = true;
+  addText("It steps out of a shadow that is deeper than shadows should be. You cannot describe its form precisely — not because it changes, but because looking at it directly is difficult in a way you cannot account for. It is not threatening. It is simply very, very old.");
+  addText('"The shrine draws them," it says. Its voice sounds like it is remembering how speaking works. "The shine of rot. The corruption that began there has been building for decades. You carry fire. That is the only thing that will end it."','dialogue');
+  setActions([
+    { label:'"Will you help me?"', primary:true, fn:()=>creatureAlly() },
+    { label:'"What are you?"', fn:()=>creatureWhatAreYou() },
+    { label:'"Get out of my way."', danger:true, fn:()=>creatureAttack() }
+  ]);
+}
+
+function creatureWhatAreYou(){
+  addText('"Something that was here before the shrine was built," it says. "Something that will be here after the corruption is gone, if you succeed. I do not have a name your language could hold."','dialogue');
+  setActions([
+    { label:'"Will you help me?"', primary:true, fn:()=>creatureAlly() },
+    { label:'"I work alone."', fn:()=>creatureAlone() }
+  ]);
+}
+
+function creatureAlly(){
+  G.story.flags.alliedCreature = true;
+  G.story.flags.creatureNegotiated = true;
+  addText('"Yes," it says. The word lands with finality. "But you must go first. The corruption responds to the fire-born. I will follow when you have opened the path."','dialogue');
+  addText("You have gained an ally. (Flag: Allied Creature)", "healtxt");
+  setActions([{ label:"Continue", fn:()=>showLoc05(true) }]);
+}
+
+function creatureAlone(){
+  addText('"Then you will burn very brightly and very briefly," it says. It steps back into the deep shadow. It does not vanish — it simply becomes not quite visible. You feel it watching still.','dialogue');
+  setActions([{ label:"Continue", fn:()=>showLoc05(true) }]);
+}
+
+function creatureAttack(){
+  addText("You raise your weapon. It does not raise anything. It simply waits. Then your fire surges against your will and you understand — it is not a threat. It simply will not be moved.","dmg");
+  addText("After a long moment, you lower your blade. \"Perhaps I was hasty.\"");
+  creatureAlly();
+}
+
+function loc05ShineHoarder(){
+  G.world.loc05RoomsVisited.push("shine_hoarder");
+  addText("The chamber is full of things that catch light — coins, shards of mirror, the bones of birds. In the center, a creature the size of a large dog sits atop its hoard. It is blind. It doesn't need eyes. It turns toward you precisely as you enter.");
+  startCombat("shine_hoarder", ()=>{
+    G.story.flags.shinehoarder_defeated = true;
+    addText("The hoard is yours. You find the Flame-Notched Blade among the collected treasures.", "healtxt");
+    addText("You also find a Strong Tonic and 40 coin.", "healtxt");
+    // Loot already handled in combat resolution
+    showLoc05(true);
+  }, ()=>showLoc05(true));
+}
+
+function loc05Forage(){
+  if(G.story.flags.loc05_foraged >= 2){
+    addText("You've already found everything the forest floor has to give.","sys"); return;
+  }
+  G.story.flags.loc05_foraged++;
+  addInv("healing_root",1);
+  addText("You find a healing root half-buried under a fallen log. It glows faintly. (+1 Healing Root)","healtxt");
+  triggerAnim("anim-heal");
+  updateHUD();
+  showLoc05(true);
+}
+
+// ============================================================
+// LOC_06: THE RUINED WAYSHRINE
+// ============================================================
+function showLoc06(wasVisited){
+  if(!wasVisited) resolveCheck2(()=>loc06Main());
+  else loc06Main();
+}
+
+function resolveCheck2(onComplete){
+  addText("At the threshold of the wayshrine, the corruption presses back. You feel it trying to read you — not your body, your fire. Whether you are the kind of thing it can use.");
+  setActions([
+    { label:"This is why I carry fire. I am not what it wants.", primary:true, fn:()=>{
+      G.story.flags.resolveCheck2Passed = true;
+      G.player.brandedHeat = Math.max(0, G.player.brandedHeat-2);
+      addText("You push back. The corruption tests you once and retreats. Your fire steadies into something almost serene. (Heat -2, +5 fire damage bonus for this encounter)","firetxt");
+      G.player.resolveBonus = true;
+      updateHUD();
+      onComplete();
+    }},
+    { label:"For a moment, doubt. What if it's stronger?", fn:()=>{
+      addText("The hesitation costs you a moment of clarity. The corruption seeps in slightly before you push it back.","dmg");
+      G.player.statusEffects.push({id:"dazed",name:"Dazed",rounds:1});
+      updateHUD();
+      onComplete();
+    }}
+  ]);
+}
+
+function loc06Main(){
+  const actions = [];
+  const f = G.story.flags;
+
+  if(inv("rope_hook")>0 && !G.world.loc05RoomsVisited.includes("bypass")){
+    actions.push({ label:"Climb to the upper level (Rope & Hook)", fn:()=>loc06Bypass() });
+  }
+  if(!f.risingDefeated){
+    actions.push({ label:"Face the Rising", primary:true, fn:()=>loc06Rising() });
+  }
+  if(f.risingDefeated && !f.grath_defeated){
+    actions.push({ label:"Confront Grath at the shrine's heart", primary:true, fn:()=>loc06Grath() });
+  }
+  if(f.grath_defeated){
+    actions.push({ label:"Destroy the shrine with fire", primary:true, fn:()=>destroyShrine() });
+  }
+  if(!f.destroyedShrine){
+    actions.push({ label:"Flee south — warn the capital instead", danger:true, fn:()=>warnCapital() });
+  }
+  actions.push({ label:"Inventory (I)", fn:()=>openInventory(()=>loc06Main()) });
+  setActions(actions);
+}
+
+function loc06Bypass(){
+  G.world.loc05RoomsVisited.push("bypass");
+  setInv("rope_hook", inv("rope_hook")-1);
+  addText("You hook the rope above the first level and haul yourself up, bypassing the ground floor entirely. You land in the upper sanctum, directly before the shrine's heart. No Beastman guards this approach.");
+  G.story.flags.risingDefeated = true; // bypass the rising too
+  updateHUD();
+  loc06Main();
+}
+
+function loc06Rising(){
+  addText("The Rising unfolds from the shrine's base. It moves without sound. You understand immediately: your blade will only slow it. Fire will end it.");
+  startCombat("rising", ()=>{
+    G.story.flags.risingDefeated = true;
+    addText("It does not reform. The fire was enough. The shrine's base smolders.");
+    loc06Main();
+  }, ()=>goToLocation("LOC_05"));
+}
+
+function loc06Grath(){
+  addText("Grath waits in the shrine's inner sanctum. It has been waiting for exactly this. Your fire responds before your conscious mind does.");
+  startCombat("beastman_named", ()=>{
+    G.story.flags.grath_defeated = true;
+    addText("Grath falls. Around you, the corruption contracts slightly, like a tide going out. The shrine waits.");
+    loc06Main();
+  }, ()=>goToLocation("LOC_05"));
+}
+
+function destroyShrine(){
+  G.story.flags.destroyedShrine = true;
+  addText("You press both hands against the shrine stone and let the fire come. All of it. The notched blade amplifies it. The corruption burns black and then nothing. The stone cracks. Light pours from the fractures — not warm light, not welcoming light, but clean light. The kind that leaves no shadows behind.");
+  setTimeout(()=>showEnding(), 1200);
+}
+
+function warnCapital(){
+  G.story.flags.warnedCapital = true;
+  addText("You turn south. The shrine pulses behind you. You move fast. You don't look back.");
+  setTimeout(()=>showEnding(), 1000);
+}
+
+// ============================================================
+// ENDINGS
+// ============================================================
+function showEnding(){
+  const f = G.story.flags;
+  clearText();
+  document.getElementById("location-header").innerHTML="";
+  document.getElementById("combat-log").style.display="none";
+
+  let title, subtitle, body;
+
+  if(f.destroyedShrine && f.alliedCreature){
+    // Ending 1: The Torch
+    title = "THE TORCH";
+    subtitle = "Ending I — Good";
+    body = `The corruption is gone. The shrine is rubble.<br><br>
+    The creature stands beside you as the forest slowly begins to remember how to be quiet. It looks, briefly, like something that might be called gratitude. Then it is gone — not fled, just no longer there.<br><br>
+    You walk back to Harrow's Crossing. Elder Maren pays you what she promised. You don't count it. You put it in your coat and walk south.<br><br>
+    The village survives. The road north will be walked again someday. When it is, whatever walks it will find the wayshrine gone — just a flat place in the forest where old stones have been scattered.<br><br>
+    <em>Something further north still stirs. But it will be quieter for now.</em>`;
+  } else if(f.destroyedShrine && !f.alliedCreature){
+    // Ending 2: The Ash
+    title = "THE ASH";
+    subtitle = "Ending II — Neutral";
+    body = `The shrine is gone. You made sure of it.<br><br>
+    You did it alone. The creature did not come. Whatever help it might have offered stayed in the deep forest where you left it, and you paid for that in fire and pain. Both hands are burned badly. It will heal. Probably.<br><br>
+    You limp back to Harrow's Crossing. Maren meets you at the door. She takes one look at your hands and doesn't ask. She pays you. You take the coin.<br><br>
+    The village survives. You did the work. The ash settles.<br><br>
+    <em>You walk south. The road is long. Your fire is quieter than it was. Something has changed and you don't have a name for what.</em>`;
+  } else if(f.warnedCapital){
+    // Ending 3: The Warning
+    title = "THE WARNING";
+    subtitle = "Ending III — Alternate";
+    body = `You rode south as fast as your legs would carry you. Three days to the nearest garrison. A knight commander listened to your account without expression. He asked questions. He wrote things down.<br><br>
+    When you finished, he folded the notes and looked at you. "Harrow's Crossing," he said. He didn't say anything after that for a long time.<br><br>
+    By the time the garrison could move, the village was gone. Not destroyed violently — just empty. Abandoned in a hurry, like the edge camp. Whatever had been pulling people north had simply... expanded its reach.<br><br>
+    The knight commander sent you away without payment. "Your information was useful," he said. "It will matter." He did not look like he was lying.<br><br>
+    <em>You walk north alone. There is no reason to go back. You go anyway. You always go.</em>`;
+  } else {
+    // Default fallback
+    title = "THE ROAD ENDS";
+    subtitle = "—";
+    body = "You survived. The road ends here, for now.";
+  }
+
+  document.getElementById("text-panel").innerHTML = `
+    <div class="text-entry narrative" style="text-align:center;padding:30px 0">
+      <div class="ending-title">${title}</div>
+      <div class="ending-subtitle">${subtitle}</div>
+      <hr class="sep">
+      <p style="max-width:560px;margin:0 auto;line-height:1.9;font-size:15px">${body}</p>
+    </div>`;
+  setActions([
+    { label:"Play Again", primary:true, fn:()=>resetGame() },
+    { label:"Return to Title", fn:()=>goToLocation("title") }
+  ]);
+}
+
+// ============================================================
+// DEATH
+// ============================================================
+function showDeath(){
+  clearText();
+  document.getElementById("location-header").innerHTML="";
+  document.getElementById("combat-log").style.display="none";
+  document.getElementById("action-panel").innerHTML="";
+  document.getElementById("text-panel").innerHTML = `
+    <div class="text-entry narrative dead-screen">
+      <div class="dead-title">THE FIRE GOES OUT</div>
+      <p style="color:#888;margin-bottom:20px;font-size:15px">The road claimed you. It claims most people who walk it.</p>
+      <p style="color:#666;font-size:14px;font-style:italic">The trees grow over the place where you fell.<br>By spring, there will be no sign.</p>
+    </div>`;
+  setTimeout(()=>{
+    setActions([
+      { label:"Begin Again", primary:true, fn:()=>resetGame() },
+      { label:"Return to Title", fn:()=>goToLocation("title") }
+    ]);
+  }, 800);
+}
+
+// ============================================================
+// COMBAT ENGINE
+// ============================================================
+function updateCombatStatus(){
+  const e = G.combat.enemy;
+  const p = G.player;
+  if(!e){ document.getElementById("combat-status").style.display="none"; return; }
+  const pct = Math.max(0, (e.hp/e.maxHp)*100);
+  const portrait = ENEMY_PORTRAITS[e.id] || "";
+  const hint = COMBAT_HINTS[e.id] || "";
+  const focusPips = [0,1,2].map(i=>`<span class="focus-pip${G.combat.focus>i?' active':''}"></span>`).join("");
+  document.getElementById("combat-status").style.display="block";
+  document.getElementById("combat-status").innerHTML =
+    `<pre class="enemy-portrait">${portrait}</pre>
+     <div class="enemy-name-bar">${e.name}</div>
+     <div class="enemy-hp-wrap">
+       <div class="enemy-hp-bar"><div class="enemy-hp-fill" style="width:${pct}%"></div></div>
+       <span class="enemy-hp-text">${e.hp}/${e.maxHp}</span>
+     </div>
+     <div class="focus-row"><span style="font-size:11px;color:#556633;font-family:'Courier New',monospace">FOCUS&nbsp;</span>${focusPips}</div>
+     ${hint?`<div class="combat-hint">${hint}</div>`:""}`;
+}
+
+function startCombat(enemyId, onWin, onFlee, ambushed){
+  const enemyTemplate = ENEMIES[enemyId];
+  if(!enemyTemplate){ if(onWin) onWin(); return; }
+
+  G.combat.enemy = JSON.parse(JSON.stringify(enemyTemplate));
+  G.combat.enemy.id = enemyId;
+  G.combat.enemy.onWin = onWin;
+  G.combat.enemy.onFlee = onFlee;
+  G.combat.active = true;
+  G.combat.round = 1;
+  G.combat.log = [];
+  G.combat.focus = 0;
+  G.combat.chargeWarning = false;
+
+  document.getElementById("combat-log").style.display="block";
+  document.getElementById("combat-log").innerHTML="";
+
+  if(!G.combat.firstEncounterSeen[enemyId]){
+    G.combat.firstEncounterSeen[enemyId] = true;
+    addText(G.combat.enemy.firstFlavor || "An enemy appears.");
+  }
+
+  if(ambushed){
+    const dmg = Math.floor(G.combat.enemy.atk * 2);
+    dealDamageToPlayer(dmg);
+    addCombatLog("AMBUSH! "+G.combat.enemy.name+" strikes for "+dmg+" before you can react.","e");
+  }
+
+  updateCombatStatus();
+  showCombatActions();
+}
+
+function showCombatActions(){
+  const e = G.combat.enemy;
+  const p = G.player;
+  if(!e){ return; }
+
+  const w = WEAPONS[p.equippedWeapon];
+  const actions = [];
+
+  const dazed      = p.statusEffects.find(s=>s.id==="dazed");
+  const entangled  = p.statusEffects.find(s=>s.id==="entangled");
+  const immobilized= p.statusEffects.find(s=>s.id==="immobilized");
+  const terrified  = p.statusEffects.find(s=>s.id==="terrified");
+  const cantAttack = dazed || immobilized || terrified;
+  const cantUseItems = immobilized;
+
+  if(dazed||entangled||terrified||immobilized){
+    addText("You are "+(dazed?"<b>Dazed</b>":entangled?"<b>Entangled</b>":terrified?"<b>Terrified</b>":"<b>Immobilized</b>")+" — some actions unavailable.","dmg");
+  }
+
+  const base = calcPlayerAtk();
+  const pressMin = Math.round(base*1.4)-2, pressMax = Math.round(base*1.4)+2;
+  const holdMin  = Math.round(base*0.7)-2, holdMax  = Math.round(base*0.7)+2;
+  const studyMin = base-2, studyMax = base+2;
+
+  if(G.combat.focus >= 2){
+    const unleashDmg = Math.round(base * (1.8 + G.combat.focus*0.3));
+    actions.push({ label:`◉ UNLEASH — ${unleashDmg} dmg (burns ${G.combat.focus} focus)`, cls:"stance-unleash", disabled:!!cantAttack, fn:()=>combatAction("unleash") });
+  }
+
+  actions.push({ label:`⚔ Press — ${pressMin}–${pressMax} dmg · +25% risk`, cls:"stance-press", disabled:!!cantAttack, fn:()=>combatAction("press") });
+  actions.push({ label:`🛡 Hold — ${holdMin}–${holdMax} dmg · halve damage taken`, cls:"stance-hold", disabled:!!cantAttack, fn:()=>combatAction("hold") });
+  actions.push({ label:`◎ Study — ${studyMin}–${studyMax} dmg · build focus`, cls:"stance-study", disabled:!!cantAttack, fn:()=>combatAction("study") });
+
+  const heatDmg = 12 + p.brandedHeat*3 + (p.resolveBonus?5:0);
+  actions.push({ label:`Heat Blast — ${heatDmg} fire dmg (${p.stamina}/15 SP)`, disabled:p.stamina<15, fn:()=>combatAction("heat_blast") });
+
+  if(w && w.special && WEAPON_SPECIALS[w.special]){
+    const sp = WEAPON_SPECIALS[w.special];
+    const locked = !!(cantAttack || (w.special==="fire_channel" && p.stamina<15));
+    actions.push({ label:`${sp.name} — ${sp.desc}`, disabled:locked, fn:()=>combatAction("special") });
+  }
+
+  actions.push({ label:"Use Item", disabled:!!cantUseItems, fn:()=>showCombatInventory() });
+  if(e.canFlee !== false){
+    actions.push({ label:"Flee (60%)", fn:()=>combatAction("flee") });
+  }
+
+  // Inject custom class into buttons after render
+  setActions(actions, true);
+}
+
+// setActions defined above
+
+function calcPlayerAtk(){
+  const p = G.player;
+  const w = WEAPONS[p.equippedWeapon];
+  let base = 8 + (w?w.atkMod:0) + (p.beastmanClawMod?3:0);
+  if(p.resolveBonus) base += 5;
+  return base;
+}
+
+function applyWeaponEffects(e, p, w){
+  if(!e.statusEffects) e.statusEffects=[];
+  if(w && w.special==="venom_edge"){ e.statusEffects.push({id:"poisoned",name:"Poisoned",rounds:3,dmg:3}); addCombatLog("  Venom Edge: enemy Poisoned!","fx"); }
+  if(p.beastmanClawMod){ e.statusEffects.push({id:"bleeding",name:"Bleeding",rounds:3,dmg:2}); addCombatLog("  Claw rend: enemy Bleeding!","fx"); }
+  if(p.thornActive){ p.thornActive=false; e.statusEffects.push({id:"poisoned",name:"Poisoned",rounds:4,dmg:3}); e.statusEffects.push({id:"bleeding",name:"Bleeding",rounds:3,dmg:2}); addCombatLog("  Thorn Extract: Poisoned+Bleeding!","fx"); }
+}
+
+function combatAction(action){
+  const e = G.combat.enemy;
+  const p = G.player;
+  const w = WEAPONS[p.equippedWeapon];
+  const base = calcPlayerAtk();
+
+  if(action==="press"){
+    const dmg = Math.max(1, Math.round(base*1.4) + Math.floor(Math.random()*5)-2);
+    applyDamageToEnemy(dmg, "physical");
+    applyWeaponEffects(e, p, w);
+    addCombatLog("You press hard — "+dmg+" damage.","p");
+    G.combat.currentStance = "press";
+    G.combat.focus = 0;
+
+  } else if(action==="hold"){
+    const dmg = Math.max(1, Math.round(base*0.7) + Math.floor(Math.random()*5)-2);
+    applyDamageToEnemy(dmg, "physical");
+    applyWeaponEffects(e, p, w);
+    addCombatLog("You hold your ground — "+dmg+" damage, braced for impact.","p");
+    G.combat.currentStance = "hold";
+
+  } else if(action==="study"){
+    const dmg = Math.max(1, base + Math.floor(Math.random()*5)-2);
+    applyDamageToEnemy(dmg, "physical");
+    applyWeaponEffects(e, p, w);
+    G.combat.focus = Math.min(3, G.combat.focus+1);
+    addCombatLog("Patient strike — "+dmg+" damage. Focus: "+G.combat.focus+"/3.","p");
+    G.combat.currentStance = "study";
+
+  } else if(action==="unleash"){
+    const dmg = Math.max(1, Math.round(base*(1.8+G.combat.focus*0.3)) + Math.floor(Math.random()*6));
+    applyDamageToEnemy(dmg, "physical");
+    applyWeaponEffects(e, p, w);
+    addCombatLog("UNLEASH! You release "+G.combat.focus+" focus — "+dmg+" damage!","p");
+    G.combat.focus = 0;
+    G.combat.currentStance = "press";
+    triggerAnim("anim-fire");
+
+  } else if(action==="heat_blast"){
+    p.stamina = Math.max(0, p.stamina-15);
+    const fireDmg = 12 + p.brandedHeat*3 + (p.resolveBonus?5:0);
+    p.brandedHeat = Math.min(5, p.brandedHeat+1);
+    applyDamageToEnemy(fireDmg, "fire");
+    addCombatLog("HEAT BLAST — "+fireDmg+" fire damage. Heat: "+p.brandedHeat+"/5.","p");
+    triggerAnim("anim-fire");
+    if(e.immunePhysical) addCombatLog("  The spirit recoils from your heat!","fx");
+    G.combat.currentStance = null;
+
+  } else if(action==="special"){
+    const sp = w.special;
+    if(sp==="quick_strike"){
+      const d1=Math.max(1,Math.floor(base/2)+Math.floor(Math.random()*3));
+      const d2=Math.max(1,Math.floor(base/2)+Math.floor(Math.random()*3));
+      applyDamageToEnemy(d1,"physical"); applyDamageToEnemy(d2,"physical");
+      addCombatLog("Quick Strike: "+d1+" + "+d2+" damage.","p");
+    } else if(sp==="cleave"){
+      const d=Math.max(1,base+3+Math.floor(Math.random()*4));
+      applyDamageToEnemy(d,"physical");
+      addCombatLog("Cleave: "+d+" damage (sweeps all).","p");
+    } else if(sp==="parry"){
+      p.parryActive=true;
+      addCombatLog("Parry set — 30% chance to halve the next hit.","p");
+    } else if(sp==="fire_channel"){
+      p.stamina=Math.max(0,p.stamina-15);
+      const d=Math.max(1,base+8+Math.floor(Math.random()*4));
+      p.brandedHeat=Math.min(5,p.brandedHeat+1);
+      applyDamageToEnemy(d,"fire");
+      addCombatLog("Fire Channel: "+d+" fire+blade damage.","p");
+      triggerAnim("anim-fire");
+    } else if(sp==="venom_edge"){
+      const d=Math.max(1,base+Math.floor(Math.random()*4));
+      applyDamageToEnemy(d,"physical");
+      if(!e.statusEffects)e.statusEffects=[];
+      e.statusEffects.push({id:"poisoned",name:"Poisoned",rounds:3,dmg:3});
+      addCombatLog("Venom Edge: "+d+" + Poisoned.","p");
+    }
+
+  } else if(action==="flee"){
+    if(e.canFlee===false){ addCombatLog("There is no escape from this.","fx"); showCombatActions(); return; }
+    const success = Math.random() < 0.6;
+    p.stamina = 0;
+    if(success){ addCombatLog("You break away and run.","p"); endCombat(false); return; }
+    else { addCombatLog("You couldn't break free!","e"); }
+  }
+
+  if(e.hp <= 0){ enemyDead(); return; }
+  enemyTurn();
+}
+
+function enemyTurn(){
+  const e = G.combat.enemy;
+  const p = G.player;
+  const stance = G.combat.currentStance;
+
+  // Tick enemy status effects
+  if(e.statusEffects){
+    e.statusEffects = e.statusEffects.filter(s=>{
+      e.hp = Math.max(0, e.hp-s.dmg);
+      addCombatLog("  "+e.name+" takes "+s.dmg+" from "+s.name+".","fx");
+      s.rounds--;
+      return s.rounds > 0;
+    });
+    if(e.hp<=0){ finishRound(); enemyDead(); return; }
+  }
+
+  // If enemy was charging last round, deliver the promised hit
+  let finalDmg = 0;
+  let specialMsg = "";
+
+  if(G.combat.chargeWarning){
+    G.combat.chargeWarning = false;
+    finalDmg = Math.floor(e.atk * 2.2);
+    specialMsg = " — CHARGED STRIKE!";
+    addCombatLog(e.name+" delivers the charged blow: "+finalDmg+" damage!","e");
+  } else {
+    // Decide enemy action this round
+    const roll = Math.random();
+    const special = e.special;
+    let baseAtk = e.atk + Math.floor(Math.random()*6)-2;
+
+    // Each enemy has weighted behaviors
+    if(special==="dirty_strike"){
+      if(roll<0.25){ p.statusEffects.push({id:"dazed",name:"Dazed",rounds:1}); specialMsg=" (Dirty Strike — Dazed!)"; }
+      else if(roll<0.45){ baseAtk=Math.floor(e.atk*1.5); specialMsg=" (lunges)"; }
+      finalDmg = baseAtk;
+
+    } else if(special==="frenzy"){
+      e.frenzyRounds=(e.frenzyRounds||0)+1;
+      if(e.frenzyRounds>=3&&!e.frenzied){ e.atk+=4; e.frenzied=true; addCombatLog("  He FRENZIES — attack surges!","fx"); }
+      if(roll<0.3){ baseAtk=Math.floor(e.atk*1.6); specialMsg=" (wild swing)"; }
+      finalDmg = baseAtk;
+
+    } else if(special==="dive"){
+      if(!e.diveUsed){ e.diveUsed=true; baseAtk=e.atk; specialMsg=" (Dive — ignores your guard)"; }
+      else if(roll<0.35){ baseAtk=Math.floor(e.atk*1.3); specialMsg=" (swoops)"; }
+      finalDmg = baseAtk;
+
+    } else if(special==="maul"){
+      if(roll<0.30){ finalDmg=e.atk*2; p.statusEffects.push({id:"bleeding",name:"Bleeding",rounds:3,dmg:2}); specialMsg=" — MAUL! Bleeding applied."; }
+      else if(roll<0.55 && !G.combat.chargeWarning){ G.combat.chargeWarning=true; addCombatLog("  "+e.name+" rears back — incoming charged strike!","fx"); finalDmg=0; }
+      else { finalDmg=baseAtk; }
+
+    } else if(special==="entangle"){
+      if(roll<0.35 && !p.statusEffects.find(s=>s.id==="entangled")){ p.statusEffects.push({id:"entangled",name:"Entangled",rounds:1}); addCombatLog("  Roots coil around you — Entangled!","fx"); finalDmg=0; }
+      else if(roll<0.55){ finalDmg=Math.floor(baseAtk*1.4); specialMsg=" (batters through)"; }
+      else { finalDmg=baseAtk; }
+
+    } else if(special==="wail_drain"){
+      if(roll<0.35){ p.stamina=0; addCombatLog("  Wail — all stamina drained!","e"); finalDmg=0; }
+      else if(roll<0.6){ p.hp=Math.max(1,p.hp-7); addCombatLog("  Drain — spirit steals 7 HP.","e"); finalDmg=0; }
+      else { finalDmg=baseAtk; }
+
+    } else if(special==="venom_web"){
+      if(roll<0.25){ p.statusEffects.push({id:"immobilized",name:"Immobilized",rounds:1}); addCombatLog("  Web — you're immobilized!","e"); finalDmg=0; }
+      else if(roll<0.55){ p.statusEffects.push({id:"poisoned",name:"Poisoned",rounds:4,dmg:3}); finalDmg=baseAtk; specialMsg=" (venomous bite)"; }
+      else { finalDmg=baseAtk; }
+
+    } else if(special==="blind_hoard"){
+      if(!e.flashUsed && roll<0.3){ e.flashUsed=true; p.statusEffects.push({id:"dazed",name:"Dazed",rounds:1}); addCombatLog("  Blinding Flash — next action lost!","e"); finalDmg=0; }
+      else if(roll<0.5){ finalDmg=Math.floor(baseAtk*1.3); specialMsg=" (raking claws)"; }
+      else { finalDmg=baseAtk; }
+
+    } else if(special==="rend_terrify"||special==="rend_terrify_named"){
+      if(special==="rend_terrify_named"&&!e.terrifyUsed&&G.combat.round===1){
+        e.terrifyUsed=true;
+        if(Math.random()<0.6){ p.statusEffects.push({id:"terrified",name:"Terrified",rounds:1}); addCombatLog("  Grath's presence — TERRIFIED!","e"); finalDmg=0; }
+        else { finalDmg=baseAtk; }
+      } else if(e.hp<e.maxHp*0.5 && roll<0.45){ finalDmg=Math.floor(e.atk*2); specialMsg=" — REND (hits twice)!"; }
+      else if(roll<0.3 && !G.combat.chargeWarning){ G.combat.chargeWarning=true; addCombatLog("  "+e.name+" coils for a powerful lunge!","fx"); finalDmg=0; }
+      else { finalDmg=baseAtk; }
+
+    } else if(special==="reforms"){
+      finalDmg = roll<0.4 ? Math.floor(baseAtk*1.3) : baseAtk;
+      if(roll<0.25){ specialMsg=" (surges through you)"; }
+
+    } else if(special==="ambush"){
+      finalDmg = baseAtk;
+      if(roll<0.35){ finalDmg=Math.floor(baseAtk*1.5); specialMsg=" (quick jab)"; }
+
+    } else {
+      finalDmg = baseAtk;
+    }
+  }
+
+  // Apply stance damage modifier
+  if(stance==="hold") finalDmg = Math.floor(finalDmg*0.5);
+  else if(stance==="press") finalDmg = Math.floor(finalDmg*1.25);
+
+  // Parry check
+  if(p.parryActive){ p.parryActive=false; if(Math.random()<0.3){ finalDmg=Math.floor(finalDmg/2); addCombatLog("  Parry! Damage halved.","fx"); } }
+
+  // Branded Heat overflow
+  if(p.brandedHeat>=5){
+    p.hp=Math.max(0,p.hp-5);
+    applyDamageToEnemy(15,"fire");
+    addCombatLog("  Brand overflows — 5 self-damage, 15 fire to "+e.name+".","fx");
+    p.brandedHeat=Math.max(0,p.brandedHeat-1);
+    if(e.hp<=0){ finishRound(); enemyDead(); return; }
+  }
+
+  if(finalDmg>0){
+    dealDamageToPlayer(finalDmg);
+    if(!specialMsg) addCombatLog(e.name+" strikes for "+finalDmg+".","e");
+    else addCombatLog(e.name+specialMsg+" — "+finalDmg+" damage.","e");
+  }
+
+  finishRound();
+  if(p.hp<=0){ showDeath(); return; }
+  if(e.hp<=0){ enemyDead(); return; }
+  updateCombatStatus();
+  showCombatActions();
+}
+
+function finishRound(){
+  const p = G.player;
+  const e = G.combat.enemy;
+  // Tick player status effects
+  const newFx=[];
+  p.statusEffects.forEach(s=>{
+    if(s.dmg){ p.hp=Math.max(0,p.hp-s.dmg); addCombatLog("  You take "+s.dmg+" from "+s.name+".","fx"); }
+    s.rounds--;
+    if(s.rounds>0) newFx.push(s);
+    else addCombatLog("  "+s.name+" fades.","fx");
+  });
+  p.statusEffects=newFx;
+  // Healing root
+  if(p.healingRootTicks>0){ p.hp=Math.min(p.hp+7,p.maxHp); p.healingRootTicks--; addCombatLog("  Healing Root: +7 HP.","fx"); }
+  // Stamina recovery — stance affects it
+  const staminaGain = G.combat.currentStance==="hold"?15:10;
+  p.stamina=Math.min(p.maxStamina,p.stamina+staminaGain);
+  // Heat cooling
+  if(p.brandedHeat>0&&G.combat.currentStance!=="heat_blast") p.brandedHeat--;
+  G.combat.round++;
+  G.combat.currentStance=null;
+  updateHUD();
+}
+
+function applyDamageToEnemy(dmg, type){
+  const e = G.combat.enemy;
+  if(type==="physical"){
+    if(e.immunePhysical){ addCombatLog("  Physical damage has no effect on the spirit.","fx"); return; }
+    // Rising reform
+    if(e.id==="rising" && !e.hasReformed && e.hp-dmg<=0){
+      e.hp = 0;
+      addCombatLog("  The Rising collapses... but does not stay down.","fx");
+      e.hp = 15;
+      e.hasReformed = true;
+      return;
+    }
+  }
+  if(type==="fire"){
+    if(e.id==="lingering_spirit") dmg = Math.floor(dmg*1.5);
+    if(e.id==="rising"){ e.hasReformed=true; } // fire permanently destroys
+  }
+  e.hp = Math.max(0, e.hp - Math.max(1, dmg - (type==="physical"?e.def:0)));
+  updateCombatStatus();
+}
+
+// (enemyTurn and updateCombatHPDisplay moved above)
+
+function dealDamageToPlayer(dmg){
+  G.player.hp = Math.max(0, G.player.hp - dmg);
+  triggerAnim("anim-damage");
+  updateHUD();
+}
+
+function grantXP(amount){
+  const p = G.player;
+  if(p.level >= MAX_LEVEL) return;
+  p.xp += amount;
+  addCombatLog("  +" + amount + " XP  ("+p.xp+"/"+XP_PER_LEVEL[p.level]+")", "fx");
+  while(p.level < MAX_LEVEL && p.xp >= XP_PER_LEVEL[p.level]){
+    p.xp -= XP_PER_LEVEL[p.level];
+    p.level++;
+    const hpGain = 15;
+    p.maxHp += hpGain;
+    p.hp = Math.min(p.hp + hpGain, p.maxHp);
+    addText("⬆ <b>Level Up!</b> You are now level "+p.level+". (+"+hpGain+" max HP, HP restored)","healtxt");
+    triggerAnim("anim-heal");
+  }
+  updateHUD();
+}
+
+function enemyDead(){
+  const e = G.combat.enemy;
+  addCombatLog(e.name+" defeated!","p");
+  addText("✓ <b>"+e.name+"</b> defeated.", "healtxt");
+
+  // Grant loot
+  if(e.loot){
+    e.loot.forEach(l=>{
+      if(l.id==="coin"){ G.player.coin+=(l.amt||0); }
+      else if(l.amt>0){ addInv(l.id, l.amt); }
+    });
+  }
+  if(e.lootExtra && Math.random()<e.lootExtra.chance){ addInv(e.lootExtra.id,1); }
+  if(e.lootWeapon){ addText("You find a "+WEAPONS[e.lootWeapon]?.name+" in the hoard!","healtxt"); G.player.equippedWeapon=e.lootWeapon; }
+  if(e.grantsSettled){ G.player.maxHp+=5; G.player.hp=Math.min(G.player.hp+5,G.player.maxHp); }
+  if(e.grantsFlag){ G.story.flags[e.grantsFlag]=true; }
+
+  // Grant XP
+  if(e.xp) grantXP(e.xp);
+
+  updateHUD();
+  endCombat(true);
+}
+
+function endCombat(won){
+  G.combat.active = false;
+  document.getElementById("combat-log").style.display = "none";
+  document.getElementById("combat-status").style.display = "none";
+  const cb = won ? G.combat.enemy.onWin : G.combat.enemy.onFlee;
+  G.combat.enemy = null;
+  if(cb) cb();
+}
+
+// ============================================================
+// COMBAT INVENTORY
+// ============================================================
+function showCombatInventory(){
+  const box = document.getElementById("overlay-box");
+  box.innerHTML = "<h3>Use Item</h3>";
+  let any = false;
+  Object.keys(G.player.inventory).forEach(id=>{
+    const n = inv(id);
+    if(n<=0) return;
+    const item = ITEMS[id];
+    if(!item) return;
+    if(item.cat==="component"||item.cat==="mod") return;
+    if(id==="prey_bird_meat") return; // can't use in combat
+    any = true;
+    const line = document.createElement("div");
+    line.className="shop-line";
+    line.innerHTML=`<span class="item-name">${item.name} x${n}</span><span>${item.desc}</span>`;
+    const btn = document.createElement("button");
+    btn.className="shop-buy"; btn.textContent="Use";
+    btn.onclick=()=>{ useCombatItem(id); closeOverlay(); };
+    line.appendChild(btn);
+    box.appendChild(line);
+  });
+  if(!any){ box.innerHTML+="<p>Nothing usable in combat.</p>"; }
+  const back = document.createElement("button");
+  back.className="action-btn"; back.textContent="Back"; back.style.marginTop="12px";
+  back.onclick=closeOverlay;
+  box.appendChild(back);
+  openOverlay();
+}
+
+function useCombatItem(id){
+  const p = G.player;
+  setInv(id, inv(id)-1);
+  if(id==="bandage"){ p.hp=Math.min(p.hp+15,p.maxHp); addText("+15 HP from Bandage.","healtxt"); triggerAnim("anim-heal"); }
+  else if(id==="field_salve"){ p.hp=Math.min(p.hp+30,p.maxHp); p.statusEffects=p.statusEffects.filter(s=>s.id!=="bleeding"); addText("+30 HP, Bleeding cured.","healtxt"); triggerAnim("anim-heal"); }
+  else if(id==="antidote_vial"){ p.statusEffects=p.statusEffects.filter(s=>s.id!=="poisoned"); addText("Poisoned status removed.","healtxt"); }
+  else if(id==="strong_tonic"){ p.hp=p.maxHp; p.statusEffects=[]; addText("Full HP restored. All status effects cured.","healtxt"); triggerAnim("anim-heal"); }
+  else if(id==="healing_root"){ p.healingRootTicks+=3; addText("Healing Root: +20 HP over 3 rounds.","healtxt"); }
+  else if(id==="oil_flask"){ applyDamageToEnemy(20,"fire"); addText("Oil Flask: 20 fire damage!","firetxt"); triggerAnim("anim-fire"); }
+  else if(id==="thorn_extract"){ p.thornActive=true; addText("Thorn Extract ready: next attack applies Poisoned+Bleeding.","firetxt"); }
+  else if(id==="smoke_pellet"){ addText("Smoke Pellet: retreating from combat!","sys"); endCombat(false); return; }
+  else if(id==="reinforced_bandage"){ p.hp=Math.min(p.hp+40,p.maxHp); addText("+40 HP from Reinforced Bandage.","healtxt"); triggerAnim("anim-heal"); }
+  updateHUD();
+  if(G.combat.active) enemyTurn();
+}
+
+// ============================================================
+// SHOPS
+// ============================================================
+function showShop(title, stock, onClose){
+  const box = document.getElementById("overlay-box");
+  box.innerHTML = "<h3>"+title+"</h3>";
+  stock.forEach(item=>{
+    const canBuy = G.player.coin >= item.cost && item.stock>0;
+    // Special: weapon shop — only show if not already own / equipped
+    const isWeapon = WEAPONS[item.id]!=null;
+    if(isWeapon && G.player.equippedWeapon===item.id){ item.stock=0; }
+    const line = document.createElement("div");
+    line.className="shop-line";
+    line.innerHTML=`<span class="item-name">${item.name}</span><span style="color:#aaa;font-size:13px">${item.desc}</span><span class="item-cost">${item.cost} coin${item.stock<10?" ("+item.stock+" left)":""}</span>`;
+    const btn = document.createElement("button");
+    btn.className="shop-buy"; btn.textContent="Buy";
+    btn.disabled = !canBuy;
+    btn.onclick=()=>{
+      if(G.player.coin<item.cost||item.stock<=0) return;
+      G.player.coin-=item.cost; item.stock--;
+      if(isWeapon){ G.player.equippedWeapon=item.id; addText("Equipped: "+item.name,"healtxt"); }
+      else { addInv(item.id,1); }
+      updateHUD();
+      // refresh shop
+      showShop(title, stock, onClose);
+    };
+    line.appendChild(btn);
+    box.appendChild(line);
+  });
+  const hr = document.createElement("hr"); hr.className="sep";
+  box.appendChild(hr);
+  const coinP = document.createElement("p");
+  coinP.innerHTML=`<span style="color:#d4af37;font-family:'Cinzel',serif">Coin: ${G.player.coin}</span>`;
+  box.appendChild(coinP);
+  const back = document.createElement("button");
+  back.className="action-btn"; back.textContent="Close"; back.style.marginTop="10px";
+  back.onclick=()=>{ closeOverlay(); if(onClose)onClose(); };
+  box.appendChild(back);
+  openOverlay();
+}
+
+// ============================================================
+// INVENTORY & CRAFTING OVERLAY
+// ============================================================
+function openInventory(onClose){
+  const box = document.getElementById("overlay-box");
+  box.innerHTML = "<h3>Inventory & Crafting</h3>";
+
+  // Items list
+  const items = Object.keys(G.player.inventory);
+  if(items.length===0){ box.innerHTML+="<p style='color:#666'>Empty.</p>"; }
+  items.forEach(id=>{
+    const n = inv(id); if(n<=0) return;
+    const item = ITEMS[id]; if(!item) return;
+    const line = document.createElement("div"); line.className="inv-line";
+    line.innerHTML=`<span>${item.name} <span style="color:#666">x${n}</span></span><span style="color:#888;font-size:12px">${item.desc}</span>`;
+    if(item.cat==="medical"||item.cat==="consumable"){
+      const btn=document.createElement("button"); btn.className="inv-use"; btn.textContent="Use";
+      if(id==="prey_bird_meat"||id==="rope_hook"||id==="torch"||id==="smoke_pellet"){
+        // Use outside combat only — just show
+        btn.onclick=()=>{ useOutOfCombatItem(id); openInventory(onClose); };
+      } else {
+        btn.textContent="View";
+      }
+      line.appendChild(btn);
+    }
+    if(id==="beastman_claw_mod"&&!G.player.beastmanClawMod){
+      const btn=document.createElement("button"); btn.className="inv-use"; btn.textContent="Apply to weapon";
+      btn.onclick=()=>{ G.player.beastmanClawMod=true; setInv("beastman_claw_mod",0); addText("Beastman Claw applied! +3 attack, Bleeding on hit.","healtxt"); updateHUD(); openInventory(onClose); };
+      line.appendChild(btn);
+    }
+    box.appendChild(line);
+  });
+
+  // Crafting
+  const hr=document.createElement("hr"); hr.className="sep"; box.appendChild(hr);
+  const craft=document.createElement("h3"); craft.style.marginBottom="10px"; craft.textContent="Crafting"; box.appendChild(craft);
+  CRAFTING_RECIPES.forEach(r=>{
+    const canCraft = r.needs.every(n=>inv(n.id)>=n.n) && (!r.requiresBlade || hasBlade());
+    const line=document.createElement("div"); line.className="craft-line";
+    const needs=r.needs.map(n=>(ITEMS[n.id]?.name||n.id)+" x"+n.n).join(", ");
+    line.innerHTML=`<span>${r.name}</span><span style="color:#666;font-size:12px">${needs}</span>`;
+    const btn=document.createElement("button"); btn.className="shop-buy"; btn.textContent="Craft";
+    btn.disabled=!canCraft;
+    btn.onclick=()=>{ doCraft(r); openInventory(onClose); };
+    line.appendChild(btn); box.appendChild(line);
+  });
+
+  const back=document.createElement("button"); back.className="action-btn"; back.textContent="Close"; back.style.marginTop="12px";
+  back.onclick=()=>{ closeOverlay(); if(onClose) onClose(); };
+  box.appendChild(back);
+  openOverlay();
+}
+
+function hasBlade(){ return ["worn_short_sword","crude_knife","guards_blade","flame_notched_blade","poison_blade"].includes(G.player.equippedWeapon); }
+
+function doCraft(r){
+  r.needs.forEach(n=>setInv(n.id, inv(n.id)-n.n));
+  if(r.result.id==="poison_blade"){ G.player.equippedWeapon="poison_blade"; addText("Crafted Poison Blade — equipped.","healtxt"); }
+  else { addInv(r.result.id, r.result.n); addText("Crafted: "+ITEMS[r.result.id]?.name||r.result.id,"healtxt"); }
+  updateHUD();
+}
+
+function useOutOfCombatItem(id){
+  if(G.combat.active) return;
+  const p = G.player;
+  setInv(id, inv(id)-1);
+  if(id==="prey_bird_meat"){ p.hp=Math.min(p.hp+10,p.maxHp); addText("+10 HP from Prey Bird Meat.","healtxt"); triggerAnim("anim-heal"); }
+  updateHUD();
+}
+
+// ============================================================
+// OVERLAY HELPERS
+// ============================================================
+function openOverlay(){
+  document.getElementById("overlay").classList.add("active");
+  document.getElementById("overlay-box").querySelector("button")?.focus();
+}
+function closeOverlay(){ document.getElementById("overlay").classList.remove("active"); }
+
+document.getElementById("overlay").addEventListener("click",e=>{ if(e.target===document.getElementById("overlay")) closeOverlay(); });
+
+// ============================================================
+// RESET
+// ============================================================
+function resetGame(){
+  G = {
+    player:{ hp:100,maxHp:100,stamina:50,maxStamina:50,inventory:{},equippedWeapon:"worn_short_sword",statusEffects:[],brandedHeat:0,coin:15,healingRootTicks:0,thornActive:false,beastmanClawMod:false,parryActive:false,settledBonus:false,resolveBonus:false,level:1,xp:0 },
+    world:{ currentLocationId:"title",visitedLocations:[],loc03Traversals:0,loc05RoomsVisited:[] },
+    story:{ flags:{ trustedElder:false,alliedCreature:false,destroyedShrine:false,warnedCapital:false,spiritDefeated:false,rampageChosen:false,buriedLeadFound:false,holtLoreHeard:false,vayneLoreHeard:false,creatureNegotiated:false,ropeHookFound:false,resolveCheck1Passed:false,resolveCheck2Passed:false,risingDefeated:false,merchantVisited:false,ida_met:false,maren_met:false,holt_met:false,vayne_met:false,creature_met:false,shinehoarder_defeated:false,nightbear_defeated:false,loc04_searched:false,loc04_rested:false,loc05_foraged:0,loc03_enc_count:0,waystationShopDone:false,creatureAliveAfterFight:false,grath_defeated:false,beastmanClawAdded:false,resolveBonus:false } },
+    combat:{ active:false,enemy:null,round:0,log:[],firstEncounterSeen:{},focus:0,chargeWarning:false,currentStance:null }
+  };
+  // Reset enemy templates
+  Object.values(ENEMIES).forEach(e=>{ e.hp=e.maxHp; if(e.diveUsed!==undefined)e.diveUsed=false; if(e.flashUsed!==undefined)e.flashUsed=false; if(e.frenzyRounds!==undefined)e.frenzyRounds=0; if(e.terrifyUsed!==undefined)e.terrifyUsed=false; if(e.hasReformed!==undefined)e.hasReformed=false; if(e.frenzied!==undefined)e.frenzied=false; });
+  // Reset shop stock
+  SHOP_VAYNE.forEach(s=>{ if(s.id==="antidote_vial")s.stock=3; else s.stock=999; });
+  SHOP_HOLT.forEach(s=>{ if(s.id==="hunters_axe"||s.id==="guards_blade")s.stock=1; else s.stock=3; });
+  SHOP_MERCHANT.forEach(s=>s.stock=2);
+  goToLocation("title");
+}
+
+// ============================================================
+// KEYBOARD NAVIGATION
+// ============================================================
+document.addEventListener("keydown",e=>{
+  if(e.key==="i"||e.key==="I"){
+    if(!G.combat.active) openInventory(()=>goToLocation(G.world.currentLocationId));
+  }
+});
+
+// ============================================================
+// INIT
+// ============================================================
+// Give starting items
+G.player.inventory["torch"] = 2;
+G.player.inventory["bandage"] = 1;
+
+goToLocation("title");
+</script>
+</body>
+</html>

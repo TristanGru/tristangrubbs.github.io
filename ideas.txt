@@ -1,13 +1,3 @@
-1. "How built this site" technical document
-2. Add games - mini games and novelty games
-3. Accessibility statement
-
-5. Live code playground — Embed a small interactive code demo (like a mini Python/JS widget)
-
-7. Blog/micro-blog — Short-form posts about what you're learning or building
-
-9. Daily quote — A rotating quote or thought that changes each day
-    Currently the same quote appears consistently
-10. Guestbook — Visitors can leave short, anonymous messages (moderated)
-11. Live visitor counter — "X people have visited this site" badge (anonymous, privacy-friendly)
-12. Sound effects toggle — Tiny UI sounds on button clicks/hovers (off by default, opt-in)
+1. Make a way to return to main site from games
+2. I can click how I want to fight this turn but cant figure out how to go to next turn.
+3. also cant see the graphics for indivisual enemies

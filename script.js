@@ -122,13 +122,13 @@ const exploreData = {
   ],
   games: [
     {
-      tag: "Playable",
-      title: "Games Collection",
-      summary: "A dedicated section for browser-playable experiments and game prototypes, organized to expand as new builds and mechanics are added.",
-      preview: ["Browser-playable experiments", "Portfolio-integrated releases", "Expanding game catalog"],
-      details: "Games page includes project entries and the in-browser code playground for quick prototyping.",
-      bullets: ["Site-hosted game section", "Room for new releases", "Integrated with portfolio"],
-      actions: [{ label: "Open Games", href: "games.html" }]
+      tag: "Text Adventure",
+      title: "The Ashen Road",
+      summary: "A text-based RPG set 500 years before the Destiny's Champion canon. Play as Kaeso, a Branded warrior investigating disappearances in a northern village — and follow the trail into something far darker.",
+      preview: ["3 distinct endings", "Turn-based combat system", "1–2 hour playthrough"],
+      details: "Built as a single HTML file with no dependencies. Features a full combat engine, status effects, Branded Heat mechanic, item crafting, NPC dialogue trees, and branching story flags that determine which of three endings you reach.",
+      bullets: ["12 enemy types with unique abilities", "Branded fire mechanic", "Choices shape the outcome"],
+      actions: [{ label: "Play Now", href: "games/the-ashen-road.html" }]
     },
     {
       tag: "Code Playground",
@@ -140,13 +140,13 @@ const exploreData = {
       actions: [{ label: "Go to Playground", href: "games.html#playground" }]
     },
     {
-      tag: "In Progress",
-      title: "More Games Coming",
-      summary: "Reserved pipeline for upcoming game concepts, interaction experiments, and polish passes before they move into the playable collection.",
-      preview: ["Upcoming game concepts", "Interaction experiments", "Polish and release pipeline"],
-      details: "Space is intentionally maintained for new projects and playable concepts.",
-      bullets: ["Continuous updates", "Experiment-friendly", "Portfolio + games continuity"],
-      actions: [{ label: "View Games", href: "games.html" }]
+      tag: "Games",
+      title: "Browse the Games Page",
+      summary: "All playable projects live in one place — browser-based games and experiments you can run without installing anything.",
+      preview: ["No installs required", "Runs in any modern browser", "Growing collection"],
+      details: "The games page collects everything playable: current releases, the code playground, and future projects as they ship.",
+      bullets: ["The Ashen Road (text RPG)", "JS + Python playground", "More in development"],
+      actions: [{ label: "See All Games", href: "games.html" }]
     }
   ]
 };
