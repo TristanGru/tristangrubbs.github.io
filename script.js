@@ -105,7 +105,7 @@ const exploreData = {
     {
       tag: "Short-form Posts",
       title: "Blog",
-      summary: "Latest post (Feb 16, 2026): why university partnerships for paid AI tools can reduce equity gaps as AI becomes part of how students learn.",
+      summary: "Latest post (Mar 10, 2026): how Lego unlocked record growth by experimenting with adult audiences — and what that means for any business already winning.",
       preview: [
         "Business, AI, technology, and market commentary",
         "Written from a technical background",
