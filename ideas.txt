@@ -1,3 +1,0 @@
-1. Make a way to return to main site from games
-2. I can click how I want to fight this turn but cant figure out how to go to next turn.
-3. also cant see the graphics for indivisual enemies
