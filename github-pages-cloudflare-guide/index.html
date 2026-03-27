@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="../styles.css" />
   <style>
     .guide { max-width: 800px; margin: 0 auto; }
     .guide h2 { margin-top: 40px; margin-bottom: 16px; font-size: 24px; }
@@ -81,18 +81,18 @@
   <!-- Header -->
   <header class="header" data-elevate>
     <div class="container header__inner">
-      <a class="brand" href="index.html" aria-label="Home">
+      <a class="brand" href="/" aria-label="Home">
         <span class="brand__mark" aria-hidden="true"></span>
         <span class="brand__name">Tristan Grubbs</span>
       </a>
 
       <nav class="nav" aria-label="Primary">
-        <a class="nav__link" href="index.html#work">Work</a>
-        <a class="nav__link" href="index.html#projects">Projects</a>
-        <a class="nav__link" href="index.html#about">About</a>
-        <a class="nav__link" href="index.html#writing">Writing</a>
-        <a class="nav__link" href="index.html#games">Games</a>
-        <a class="nav__link" href="index.html#contact">Contact</a>
+        <a class="nav__link" href="/#work">Work</a>
+        <a class="nav__link" href="/#projects">Projects</a>
+        <a class="nav__link" href="/#about">About</a>
+        <a class="nav__link" href="/#writing">Writing</a>
+        <a class="nav__link" href="/#games">Games</a>
+        <a class="nav__link" href="/#contact">Contact</a>
       </nav>
 
       <button class="btn btn--ghost header__cta" id="themeToggle" type="button" aria-label="Switch theme">
@@ -170,7 +170,7 @@
           </ol>
 
           <h2>6) Add DNS Records (A + CNAME)</h2>
-          
+
           <h3>A Records (for the apex/root domain)</h3>
           <p>Create 4 records with these settings:</p>
           <table>
@@ -257,16 +257,16 @@
           </ol>
 
           <h2>Troubleshooting</h2>
-          
+
           <p><strong>DNS check won't pass:</strong><br>
           Confirm Cloudflare records are set to <strong>DNS only</strong>, not proxied.</p>
-          
+
           <p><strong>Site loads on www but not root (or vice versa):</strong><br>
           Make sure you added the 4 A records for the root and the CNAME for www.</p>
-          
+
           <p><strong>HTTPS not working:</strong><br>
           Cloudflare mode must be <strong>Full (strict)</strong> and GitHub must have <strong>Enforce HTTPS</strong> enabled.</p>
-          
+
           <p><strong>Wrong CNAME target:</strong><br>
           Use <code>&lt;user&gt;.github.io</code> (not the repository name).</p>
 
@@ -274,7 +274,7 @@
           <p>Your domain should now serve your GitHub Pages site over HTTPS. Go make something nice, or at least something that loads.</p>
 
           <div style="margin-top: 40px;">
-            <a class="btn btn--ghost" href="writing.html">← Back to Writing</a>
+            <a class="btn btn--ghost" href="/writing">← Back to Writing</a>
           </div>
         </div>
       </div>
@@ -287,13 +287,13 @@
             <span class="muted">© <span id="year"></span> Tristan Grubbs</span>
           </div>
           <div class="footer__right">
-            <a class="link" href="index.html">← Back to Home</a>
+            <a class="link" href="/">← Back to Home</a>
           </div>
         </footer>
       </div>
     </section>
   </main>
 
-  <script src="script.js"></script>
+  <script src="../script.js"></script>
 </body>
 </html>

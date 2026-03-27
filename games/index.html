@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="../styles.css" />
 </head>
 
 <body>
@@ -25,23 +25,23 @@
   <!-- Header -->
   <header class="site-header" data-elevate>
     <div class="container header-inner">
-      <a class="brand" href="index.html#top" aria-label="Home">
+      <a class="brand" href="/#top" aria-label="Home">
         <span class="brand-mark" aria-hidden="true"></span>
         <span class="brand-name">Tristan Grubbs</span>
       </a>
 
       <nav class="site-nav" aria-label="Primary">
-        <a class="nav-link" href="index.html#hero">Me</a>
-        <a class="nav-link" data-zone="projects" href="index.html#projects">Projects</a>
-        <a class="nav-link" data-zone="work" href="index.html#work">Work</a>
-        <a class="nav-link" data-zone="explore" href="index.html#explore">Explore</a>
-        <a class="nav-link" data-zone="contact" href="index.html#contact">Contact</a>
+        <a class="nav-link" href="/#hero">Me</a>
+        <a class="nav-link" data-zone="projects" href="/#projects">Projects</a>
+        <a class="nav-link" data-zone="work" href="/#work">Work</a>
+        <a class="nav-link" data-zone="explore" href="/#explore">Explore</a>
+        <a class="nav-link" data-zone="contact" href="/#contact">Contact</a>
       </nav>
 
       <div class="header-cta">
-        <a class="button button-ghost" href="blog.html">Read my blog!</a>
-        <a class="button button-primary" href="Tristan Grubbs Resume.pdf" target="_blank" rel="noopener">Resume</a>
-        <a class="button button-ghost" href="index.html#contact">Contact</a>
+        <a class="button button-ghost" href="/blog">Blog</a>
+        <a class="button button-primary" href="../Tristan Grubbs Resume.pdf" target="_blank" rel="noopener">Resume</a>
+        <a class="button button-ghost" href="/#contact">Contact</a>
       </div>
 
       <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false" type="button">
@@ -51,13 +51,13 @@
 
     <div class="mobile-nav" id="mobileNav" aria-hidden="true">
       <div class="container mobile-nav-inner">
-        <a class="mobile-link" href="index.html#hero">Me</a>
-        <a class="mobile-link" href="index.html#projects">Projects</a>
-        <a class="mobile-link" href="index.html#work">Work</a>
-        <a class="mobile-link" href="index.html#explore">Explore</a>
-        <a class="mobile-link" href="index.html#contact">Contact</a>
-        <a class="mobile-link" href="blog.html">Read my blog!</a>
-        <a class="mobile-link" href="Tristan Grubbs Resume.pdf" target="_blank" rel="noopener">Resume</a>
+        <a class="mobile-link" href="/#hero">Me</a>
+        <a class="mobile-link" href="/#projects">Projects</a>
+        <a class="mobile-link" href="/#work">Work</a>
+        <a class="mobile-link" href="/#explore">Explore</a>
+        <a class="mobile-link" href="/#contact">Contact</a>
+        <a class="mobile-link" href="/blog">Blog</a>
+        <a class="mobile-link" href="../Tristan Grubbs Resume.pdf" target="_blank" rel="noopener">Resume</a>
       </div>
     </div>
   </header>
@@ -94,7 +94,7 @@
             </div>
             <div class="proj__body">
               <div class="proj__links">
-                <a class="btn btn--primary" href="games/the-ashen-road.html">Play Now &rarr;</a>
+                <a class="btn btn--primary" href="/games/the-ashen-road">Play Now &rarr;</a>
               </div>
             </div>
           </article>
@@ -104,9 +104,9 @@
             <p>More games and interactive experiments will be added here. Check back soon!</p>
           </article>
 
-          <!-- 
+          <!--
           TEMPLATE FOR ADDING NEW GAMES:
-          
+
           <article class="proj reveal">
             <div class="proj__top">
               <div>
@@ -130,7 +130,7 @@
                 </div>
               </div>
               <div class="proj__links">
-                <a class="btn btn--primary" href="games/game-name.html">Play Now &rarr;</a>
+                <a class="btn btn--primary" href="/games/game-name">Play Now &rarr;</a>
               </div>
             </div>
           </article>
@@ -162,7 +162,7 @@
               <button class="btn btn--ghost" id="clearOutput" type="button">Clear</button>
             </div>
           </div>
-          
+
           <div class="playground-full__body">
             <div class="playground-full__editor-wrap">
               <div class="playground-full__label">Code</div>
@@ -178,7 +178,7 @@ console.log("2 + 2 =", 2 + 2);
 const nums = [1, 2, 3, 4, 5];
 nums.forEach(n => console.log(n * n));</textarea>
             </div>
-            
+
             <div class="playground-full__output-wrap">
               <div class="playground-full__label">Output</div>
               <div class="playground-full__output" id="codeOutput">
@@ -186,7 +186,7 @@ nums.forEach(n => console.log(n * n));</textarea>
               </div>
             </div>
           </div>
-          
+
           <div class="playground-full__status" id="playgroundStatus"></div>
         </div>
       </div>
@@ -200,7 +200,7 @@ nums.forEach(n => console.log(n * n));</textarea>
             <span class="muted">&copy; <span id="year"></span> Tristan Grubbs</span>
           </div>
           <div class="footer__right">
-            <a class="link" href="index.html#games">&larr; Back to Home</a>
+            <a class="link" href="/#games">&larr; Back to Home</a>
           </div>
         </footer>
       </div>
@@ -209,8 +209,6 @@ nums.forEach(n => console.log(n * n));</textarea>
 
   <!-- Pyodide for Python execution -->
   <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
-  <script src="script.js"></script>
+  <script src="../script.js"></script>
 </body>
 </html>
-
-

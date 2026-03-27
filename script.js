@@ -43,6 +43,275 @@ if (menuToggle && mobileNav) {
   mobileNav.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => setMobile(false)));
 }
 
+const MAX_FEATURED_PROJECTS = 5;
+
+const projectsData = [
+  {
+    id: "scamshield",
+    featuredRank: 1,
+    tags: ["Python + Raspberry Pi", "Award Winning"],
+    title: "ScamShield",
+    link: "https://github.com/TristanGru/ScamShield",
+    linkType: "GitHub repository",
+    description:
+      "A Raspberry Pi device that listens to phone calls on speakerphone, detects scam patterns in real time using Whisper + Gemini AI, and instantly alerts both the potential victim and their family via SMS, audio, and visual indicators before any damage is done.",
+    bullets: [
+      { strongPrefix: "3rd place overall", text: " at HooHacks 2026 out of 220+ projects" },
+      "Dual detection engine: Gemini API scoring + offline keyword fallback",
+      "Multi-channel alert pipeline: SMS (Twilio), voice (Google Nest + ElevenLabs), LED"
+    ]
+  },
+  {
+    id: "ai-decoded",
+    featuredRank: 2,
+    tags: ["WEB PLATFORM | AI | CONTENT SYSTEM"],
+    title: "AI Decoded",
+    link: "https://aidecodedbrief.com/",
+    linkType: "Website",
+    description:
+      "A platform that keeps people up to date with AI, organizes evergreen AI knowledge, and translates the changing world into practical business and career insights through clear explainers and recurring updates built for real-world decision making.",
+    bullets: [
+      "Curated weekly AI briefings across models, tools, business, and regulation",
+      "Built a structured platform for organizing AI knowledge and recurring publishing",
+      "Designed to make complex AI topics accessible and actionable for broad audiences"
+    ]
+  },
+  {
+    id: "uva-club-hub",
+    featuredRank: 3,
+    tags: ["React + Firebase"],
+    title: "UVA Club Hub Platform",
+    description:
+      "A centralized web platform built as a possible aid to UVA's fragmented club ecosystem. Students can search, join, and receive announcements from clubs in one unified interface instead of scattered GroupMe chats and emails.",
+    bullets: [
+      "Real-time club search, join flows, and announcement broadcasting",
+      "Firebase backend with live data sync across sessions",
+      "Delivered as a collaborative team project with iterative sprint cycles"
+    ]
+  },
+  {
+    id: "battling-knights",
+    featuredRank: 4,
+    tags: ["Python"],
+    title: "Battling Knights Strategy Game",
+    description: "Two-player medieval strategy game with custom visuals and turn-based gameplay logic.",
+    bullets: []
+  },
+  {
+    id: "game-library-web-app",
+    featuredRank: 5,
+    tags: ["Django | Python | SQL"],
+    title: "Game Library Web App",
+    description: "Full-stack web application for a fictional game library with item management and cataloging.",
+    bullets: []
+  }
+];
+
+const experienceData = [
+  {
+    organization: "Naval Information Warfare Center",
+    stackTag: "POWER BI | DATA ANALYSIS",
+    title: "Interactive Power BI Dashboard",
+    description:
+      "Designed and deployed an interactive dashboard by transforming 11 fragmented datasets into actionable insights.",
+    bullets: [
+      "Consolidated disparate sources",
+      "Built leadership-ready visualizations",
+      "Enabled decision support"
+    ]
+  },
+  {
+    organization: "Naval Information Warfare Center",
+    stackTag: "POWER APPS | AUTOMATION",
+    title: "Power Apps Automation",
+    description:
+      "Led the design and began implementation of a scalable Microsoft Power Apps solution for account management workflows.",
+    bullets: ["Reduced manual overhead", "Improved process efficiency", "Built for enterprise scale"]
+  },
+  {
+    organization: "Naval Information Warfare Center",
+    stackTag: "DOCUMENTATION | TESTING | SECURE SYSTEMS",
+    title: "Technical Documentation and Testing",
+    description:
+      "Authored design documents and user guides while supporting performance testing of secure communication systems.",
+    bullets: ["Clear architecture documentation", "Practical end-user guides", "Security-focused testing support"]
+  }
+];
+
+function createCardTagRow(tags) {
+  const tagRow = document.createElement("div");
+  tagRow.className = "card-tag-row";
+
+  (tags || []).forEach((tag) => {
+    const tagNode = document.createElement("p");
+    tagNode.className = "card-tag";
+    tagNode.textContent = tag;
+    if (String(tag).trim().toLowerCase() === "award winning") {
+      tagNode.classList.add("card-tag--award");
+    }
+    tagRow.appendChild(tagNode);
+  });
+
+  return tagRow;
+}
+
+function getFeaturedProjects() {
+  return [...projectsData]
+    .sort((a, b) => a.featuredRank - b.featuredRank)
+    .slice(0, MAX_FEATURED_PROJECTS);
+}
+
+function createProjectTitle(project) {
+  const heading = document.createElement("h3");
+  heading.className = "project-title";
+  if (!project.link) {
+    heading.textContent = project.title;
+    return heading;
+  }
+
+  const anchor = document.createElement("a");
+  anchor.href = project.link;
+  anchor.className = "project-title-link";
+  anchor.textContent = project.title;
+  anchor.target = "_blank";
+  anchor.rel = "noopener";
+  const linkTargetLabel = project.linkType ? `Open ${project.linkType}` : "Open external link";
+  anchor.setAttribute("aria-label", `${project.title}. ${linkTargetLabel}.`);
+  anchor.title = linkTargetLabel;
+  heading.appendChild(anchor);
+  return heading;
+}
+
+function renderFeaturedProjects() {
+  const featuredProjectsGrid = document.getElementById("featuredProjectsGrid");
+  if (!featuredProjectsGrid) return;
+
+  const featuredProjects = getFeaturedProjects();
+  featuredProjectsGrid.innerHTML = "";
+
+  featuredProjects.forEach((project, index) => {
+    const card = document.createElement("article");
+    card.className = "card reveal";
+    card.dataset.index = String(index + 1).padStart(2, "0");
+    card.appendChild(createCardTagRow(project.tags));
+
+    card.appendChild(createProjectTitle(project));
+
+    const description = document.createElement("p");
+    description.className = "project-description";
+    description.textContent = project.description;
+    card.appendChild(description);
+
+    const bullets = project.bullets || [];
+    if (bullets.length) {
+      const bulletList = document.createElement("ul");
+      bulletList.className = "project-bullets";
+      bullets.forEach((bullet) => {
+        const listItem = document.createElement("li");
+        if (typeof bullet === "string") {
+          listItem.textContent = bullet;
+        } else if (bullet && typeof bullet === "object") {
+          if (bullet.strongPrefix) {
+            const strong = document.createElement("strong");
+            strong.textContent = bullet.strongPrefix;
+            listItem.appendChild(strong);
+          }
+          if (bullet.text) {
+            listItem.appendChild(document.createTextNode(bullet.text));
+          }
+        }
+        bulletList.appendChild(listItem);
+      });
+      card.appendChild(bulletList);
+    } else {
+      card.classList.add("project-card--no-bullets");
+    }
+
+    featuredProjectsGrid.appendChild(card);
+  });
+}
+
+function renderExperience() {
+  const experienceGrid = document.getElementById("experienceGrid");
+  if (!experienceGrid) return;
+
+  experienceGrid.innerHTML = "";
+  experienceData.forEach((entry) => {
+    const card = document.createElement("article");
+    card.className = "card reveal experience-card";
+
+    card.appendChild(createCardTagRow([entry.organization, entry.stackTag].filter(Boolean)));
+
+    const title = document.createElement("h3");
+    title.textContent = entry.title;
+    card.appendChild(title);
+
+    const description = document.createElement("p");
+    description.textContent = entry.description;
+    card.appendChild(description);
+
+    const bulletList = document.createElement("ul");
+    (entry.bullets || []).forEach((bullet) => {
+      const listItem = document.createElement("li");
+      listItem.textContent = bullet;
+      bulletList.appendChild(listItem);
+    });
+    card.appendChild(bulletList);
+
+    experienceGrid.appendChild(card);
+  });
+}
+
+function syncFeaturedProjectLayout() {
+  const featuredProjectsGrid = document.getElementById("featuredProjectsGrid");
+  if (!featuredProjectsGrid) return;
+
+  const allTitles = [...featuredProjectsGrid.querySelectorAll(".project-title")];
+  const allDescriptions = [...featuredProjectsGrid.querySelectorAll(".project-description")];
+  const bulletCards = [...featuredProjectsGrid.querySelectorAll(".card:not(.project-card--no-bullets)")];
+  const titles = bulletCards
+    .map((card) => card.querySelector(".project-title"))
+    .filter(Boolean);
+  const descriptions = bulletCards
+    .map((card) => card.querySelector(".project-description"))
+    .filter(Boolean);
+
+  allTitles.forEach((title) => {
+    title.style.minHeight = "";
+  });
+  allDescriptions.forEach((description) => {
+    description.style.minHeight = "";
+  });
+
+  if (window.innerWidth <= 1080 || !titles.length || !descriptions.length) return;
+
+  const maxTitleHeight = titles.reduce((max, title) => Math.max(max, title.getBoundingClientRect().height), 0);
+  const maxDescriptionHeight = descriptions.reduce(
+    (max, description) => Math.max(max, description.getBoundingClientRect().height),
+    0
+  );
+
+  titles.forEach((title) => {
+    title.style.minHeight = `${Math.ceil(maxTitleHeight)}px`;
+  });
+  descriptions.forEach((description) => {
+    description.style.minHeight = `${Math.ceil(maxDescriptionHeight)}px`;
+  });
+}
+
+renderFeaturedProjects();
+renderExperience();
+syncFeaturedProjectLayout();
+
+let featuredLayoutRafId = null;
+window.addEventListener("resize", () => {
+  if (featuredLayoutRafId) cancelAnimationFrame(featuredLayoutRafId);
+  featuredLayoutRafId = requestAnimationFrame(() => {
+    syncFeaturedProjectLayout();
+    featuredLayoutRafId = null;
+  });
+});
+
 const reveals = document.querySelectorAll(".reveal");
 if (!prefersReducedMotion && reveals.length) {
   const revealObserver = new IntersectionObserver(
@@ -90,7 +359,7 @@ const exploreData = {
       details:
         "Uses bioecological systems theory and social capital framing to analyze how universities can build stronger opportunity ecosystems.",
       bullets: ["Social capital framing", "UVA CIO hub context"],
-      actions: [{ label: "Read Prospectus", href: "Prospectus.pdf", external: true }, { label: "Open Writing", href: "writing.html" }]
+      actions: [{ label: "Read Prospectus", href: "Prospectus.pdf", external: true }, { label: "Open Writing", href: "/writing" }]
     },
     {
       tag: "AI Research Paper",
@@ -100,7 +369,7 @@ const exploreData = {
       details:
         "Compares Logistic Regression and XGBoost under uncertain short-term market signal conditions.",
       bullets: ["Final Project Report", "FinBERT sentiment pipeline", "Model comparison"],
-      actions: [{ label: "Read Paper", href: "Final Project Report.pdf", external: true }, { label: "Open Writing", href: "writing.html" }]
+      actions: [{ label: "Read Paper", href: "Final Project Report.pdf", external: true }, { label: "Open Writing", href: "/writing" }]
     },
     {
       tag: "Short-form Posts",
@@ -117,7 +386,7 @@ const exploreData = {
         "Written from a technical background",
         "Rooted in a love for business"
       ],
-      actions: [{ label: "Open Blog", href: "blog.html" }]
+      actions: [{ label: "Open Blog", href: "/blog" }]
     }
   ],
   games: [
@@ -128,7 +397,7 @@ const exploreData = {
       preview: ["3 distinct endings", "Turn-based combat system", "1–2 hour playthrough"],
       details: "Built as a single HTML file with no dependencies. Features a full combat engine, status effects, Branded Heat mechanic, item crafting, NPC dialogue trees, and branching story flags that determine which of three endings you reach.",
       bullets: ["12 enemy types with unique abilities", "Branded fire mechanic", "Choices shape the outcome"],
-      actions: [{ label: "Play Now", href: "games/the-ashen-road.html" }]
+      actions: [{ label: "Play Now", href: "/games/the-ashen-road" }]
     },
     {
       tag: "Code Playground",
@@ -137,7 +406,7 @@ const exploreData = {
       preview: ["In-browser JavaScript runner", "Pyodide-powered Python", "Shared output panel"],
       details: "Supports quick testing with language tabs and output panel without leaving the page.",
       bullets: ["JavaScript runner", "Pyodide Python runtime", "Shared output panel"],
-      actions: [{ label: "Go to Playground", href: "games.html#playground" }]
+      actions: [{ label: "Go to Playground", href: "/games#playground" }]
     },
     {
       tag: "Games",
@@ -146,7 +415,7 @@ const exploreData = {
       preview: ["No installs required", "Runs in any modern browser", "Growing collection"],
       details: "The games page collects everything playable: current releases, the code playground, and future projects as they ship.",
       bullets: ["The Ashen Road (text RPG)", "JS + Python playground", "More in development"],
-      actions: [{ label: "See All Games", href: "games.html" }]
+      actions: [{ label: "See All Games", href: "/games" }]
     }
   ]
 };
@@ -166,9 +435,9 @@ const drawerActions = document.getElementById("drawerActions");
 let activeExploreTab = "writing";
 
 function getViewAllLink(tab) {
-  if (tab === "writing") return "writing.html";
-  if (tab === "games") return "games.html";
-  return "writing.html";
+  if (tab === "writing") return "/writing";
+  if (tab === "games") return "/games";
+  return "/writing";
 }
 
 function openDrawer(item) {
@@ -288,8 +557,8 @@ document.addEventListener("keydown", (event) => {
     if (konamiIndex === konamiSequence.length) {
       konamiIndex = 0;
       const path = window.location.pathname.toLowerCase();
-      if (!path.endsWith("easter-egg.html")) {
-        window.location.href = "easter-egg.html";
+      if (!path.includes("easter-egg")) {
+        window.location.href = "/easter-egg";
       }
     }
     return;
@@ -625,7 +894,7 @@ const quoteText = document.getElementById("quoteText");
 const quoteAuthor = document.getElementById("quoteAuthor");
 
 if (quoteText && quoteAuthor) {
-  fetch("./quotes.json")
+  fetch("/quotes.json")
     .then((res) => {
       if (!res.ok) throw new Error("Quotes fetch failed");
       return res.json();
