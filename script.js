@@ -81,6 +81,8 @@ const projectsData = [
     featuredRank: 3,
     tags: ["React + Firebase"],
     title: "UVA Club Hub Platform",
+    link: "https://github.com/TristanGru/UVA-Club-Hub",
+    linkType: "GitHub repository",
     description:
       "A centralized web platform built as a possible aid to UVA's fragmented club ecosystem. Students can search, join, and receive announcements from clubs in one unified interface instead of scattered GroupMe chats and emails.",
     bullets: [
