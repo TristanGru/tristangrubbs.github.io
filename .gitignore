@@ -1,0 +1,9 @@
+# AI tooling — local only
+.claude/
+.gstack/
+.portfolio-brain/
+.project-memory/
+
+# Export/backup directories
+export/
+subpages/

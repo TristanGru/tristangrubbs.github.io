@@ -54,9 +54,10 @@ const projectsData = [
     link: "https://github.com/TristanGru/ScamShield",
     linkType: "GitHub repository",
     description:
-      "A Raspberry Pi device that listens to phone calls on speakerphone, detects scam patterns in real time using Whisper + Gemini AI, and instantly alerts both the potential victim and their family via SMS, audio, and visual indicators before any damage is done.",
+      "A Raspberry Pi that listens to phone calls, detects scam patterns in real time using Whisper + Gemini AI, and alerts the victim and their family via SMS, audio, and visual indicators — before any damage is done. Built in 24 hours; I led as PM across a team of three (2 engineers + myself).",
     bullets: [
-      { strongPrefix: "3rd place overall", text: " at HooHacks 2026 out of 220+ projects" },
+      { strongPrefix: "Award Winning", text: " — 3rd overall at HooHacks 2026 out of 220+ projects" },
+      "Led as PM: scoped problem, divided work across 2 engineers and myself, managed 24-hour timeline",
       "Dual detection engine: Gemini API scoring + offline keyword fallback",
       "Multi-channel alert pipeline: SMS (Twilio), voice (Google Nest + ElevenLabs), LED"
     ]
@@ -115,11 +116,11 @@ const experienceData = [
     stackTag: "POWER BI | DATA ANALYSIS",
     title: "Interactive Power BI Dashboard",
     description:
-      "Designed and deployed an interactive dashboard by transforming 11 fragmented datasets into actionable insights.",
+      "Consolidated 11 fragmented data sources into a single interactive dashboard — giving NIWC leadership a unified view across operations and turning scattered data into a decision-ready briefing.",
     bullets: [
-      "Consolidated disparate sources",
-      "Built leadership-ready visualizations",
-      "Enabled decision support"
+      "Merged 11 disparate datasets into one source of truth for leadership",
+      "Designed visualizations for non-technical decision makers, not just analysts",
+      "Shortened the path from raw data to actionable decision"
     ]
   },
   {
@@ -127,16 +128,24 @@ const experienceData = [
     stackTag: "POWER APPS | AUTOMATION",
     title: "Power Apps Automation",
     description:
-      "Led the design and began implementation of a scalable Microsoft Power Apps solution for account management workflows.",
-    bullets: ["Reduced manual overhead", "Improved process efficiency", "Built for enterprise scale"]
+      "Designed an automated Power Apps solution to replace a manual account management process — eliminating recurring bottlenecks for a team operating at federal scale.",
+    bullets: [
+      "Identified and eliminated a manual process creating persistent operational overhead",
+      "Scoped and designed a solution built to scale across a large government organization",
+      "Delivered a designed, implementation-ready system"
+    ]
   },
   {
     organization: "Naval Information Warfare Center",
     stackTag: "DOCUMENTATION | TESTING | SECURE SYSTEMS",
     title: "Technical Documentation and Testing",
     description:
-      "Authored design documents and user guides while supporting performance testing of secure communication systems.",
-    bullets: ["Clear architecture documentation", "Practical end-user guides", "Security-focused testing support"]
+      "Wrote the documentation that made a secure communications system legible to both engineers and end users — then validated it held up under performance testing.",
+    bullets: [
+      "Authored architecture docs and end-user guides for a classified communications system",
+      "Designed guides clear enough to reduce support burden on the engineering team",
+      "Supported performance testing to verify reliability under real operating conditions"
+    ]
   }
 ];
 
@@ -638,7 +647,7 @@ function createConstellationMap(canvas) {
       x: Math.random(),
       y: Math.random(),
       r: Math.random() * 1 + 0.35,
-      a: Math.random() * 0.28 + 0.06
+      a: Math.random() * 0.28 + 0.12
     }));
     draw(performance.now(), true);
   };
@@ -710,13 +719,17 @@ function createConstellationMap(canvas) {
 
   const draw = (time, staticFrame = false) => {
     updateFocus();
-    ctx.fillStyle = "#0f1319";
+    const isLight = document.documentElement.dataset.theme !== "dark";
+
+    ctx.fillStyle = isLight ? "#faf8f5" : "#0f1319";
     ctx.fillRect(0, 0, width, height);
 
     stars.forEach((star) => {
       ctx.beginPath();
       ctx.arc(star.x * width, star.y * height, star.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(234, 242, 255, ${star.a})`;
+      ctx.fillStyle = isLight
+        ? `rgba(181, 120, 58, ${star.a * 0.5})`
+        : `rgba(234, 242, 255, ${star.a})`;
       ctx.fill();
     });
 
@@ -735,7 +748,9 @@ function createConstellationMap(canvas) {
       ctx.moveTo(from.x, from.y);
       ctx.lineTo(to.x, to.y);
       ctx.lineWidth = 1 + emphasis * 0.8;
-      ctx.strokeStyle = `rgba(236, 244, 255, ${0.08 + emphasis * 0.33})`;
+      ctx.strokeStyle = isLight
+        ? `rgba(28, 25, 23, ${0.16 + emphasis * 0.20})`
+        : `rgba(236, 244, 255, ${0.08 + emphasis * 0.33})`;
       ctx.stroke();
     });
 
@@ -745,12 +760,16 @@ function createConstellationMap(canvas) {
       const radius = 3 + emphasis * 2.8;
       ctx.beginPath();
       ctx.arc(node.x, node.y, radius + 4 + emphasis * 2 + (isHovered ? 2 : 0), 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(236, 244, 255, ${0.04 + emphasis * 0.13 + (isHovered ? 0.08 : 0)})`;
+      ctx.fillStyle = isLight
+        ? `rgba(28, 25, 23, ${0.07 + emphasis * 0.12 + (isHovered ? 0.04 : 0)})`
+        : `rgba(236, 244, 255, ${0.04 + emphasis * 0.13 + (isHovered ? 0.08 : 0)})`;
       ctx.fill();
 
       ctx.beginPath();
       ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(244, 248, 255, ${0.42 + emphasis * 0.45})`;
+      ctx.fillStyle = isLight
+        ? `rgba(28, 25, 23, ${0.28 + emphasis * 0.48})`
+        : `rgba(244, 248, 255, ${0.42 + emphasis * 0.45})`;
       ctx.fill();
     });
 
@@ -767,12 +786,18 @@ function createConstellationMap(canvas) {
       const pillX = node.x - pillWidth / 2;
       const pillY = node.y - 28;
       drawRoundedRect(pillX, pillY, pillWidth, pillHeight, 10);
-      ctx.fillStyle = `rgba(12, 16, 24, ${0.58 + emphasis * 0.22})`;
+      ctx.fillStyle = isLight
+        ? `rgba(28, 25, 23, ${0.68 + emphasis * 0.20})`
+        : `rgba(12, 16, 24, ${0.58 + emphasis * 0.22})`;
       ctx.fill();
-      ctx.strokeStyle = `rgba(236, 244, 255, ${0.12 + emphasis * 0.28})`;
+      ctx.strokeStyle = isLight
+        ? `rgba(181, 120, 58, ${0.18 + emphasis * 0.42})`
+        : `rgba(236, 244, 255, ${0.12 + emphasis * 0.28})`;
       ctx.lineWidth = 1;
       ctx.stroke();
-      ctx.fillStyle = `rgba(236, 244, 255, ${0.66 + emphasis * 0.28})`;
+      ctx.fillStyle = isLight
+        ? `rgba(250, 248, 245, ${0.85 + emphasis * 0.12})`
+        : `rgba(236, 244, 255, ${0.66 + emphasis * 0.28})`;
       ctx.fillText(text, node.x, pillY + pillHeight / 2);
     });
 
@@ -787,9 +812,9 @@ function createConstellationMap(canvas) {
       if (tooltipX + tooltipWidth > width - 8) tooltipX = width - tooltipWidth - 8;
       if (tooltipY < 8) tooltipY = pointerY + 12;
       drawRoundedRect(tooltipX, tooltipY, tooltipWidth, tooltipHeight, 10);
-      ctx.fillStyle = "rgba(12, 16, 24, 0.86)";
+      ctx.fillStyle = isLight ? "rgba(28, 25, 23, 0.88)" : "rgba(12, 16, 24, 0.86)";
       ctx.fill();
-      ctx.strokeStyle = "rgba(236, 244, 255, 0.28)";
+      ctx.strokeStyle = isLight ? "rgba(250, 248, 245, 0.14)" : "rgba(236, 244, 255, 0.28)";
       ctx.lineWidth = 1;
       ctx.stroke();
       ctx.fillStyle = "rgba(244, 248, 255, 0.95)";
@@ -865,6 +890,25 @@ if (portal && zoneTriggers.length) {
     node.addEventListener("blur", () => portal.setZone("none"));
   });
 }
+
+function handleThemeToggle() {
+  const html = document.documentElement;
+  const isDark = html.dataset.theme === "dark";
+  if (isDark) {
+    delete html.dataset.theme;
+    localStorage.removeItem("theme");
+  } else {
+    html.dataset.theme = "dark";
+    localStorage.setItem("theme", "dark");
+  }
+  if (portal && prefersReducedMotion) portal.redraw();
+}
+
+const themeToggle = document.getElementById("themeToggle");
+if (themeToggle) themeToggle.addEventListener("click", handleThemeToggle);
+
+const themeToggleMobile = document.getElementById("themeToggleMobile");
+if (themeToggleMobile) themeToggleMobile.addEventListener("click", handleThemeToggle);
 
 const resumeBtn = document.getElementById("resumeBtn");
 const resumeModal = document.getElementById("resumeModal");

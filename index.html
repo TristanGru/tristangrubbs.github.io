@@ -1,188 +1,355 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tristan Grubbs | Portfolio</title>
-  <meta name="description" content="Portfolio website for Tristan Grubbs - Data Analyst and Computer Science student at UVA." />
-  <meta property="og:title" content="Tristan Grubbs | Portfolio" />
-  <meta property="og:description" content="Data Analysis, Automation, and project work by Tristan Grubbs." />
-  <meta property="og:type" content="website" />
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=1280" />
+<title>Tristan C. Grubbs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" />
+<link rel="stylesheet" href="memo.css" />
 </head>
 <body>
-  <div class="site-fx" aria-hidden="true"></div>
+<div class="doc">
 
-  <header class="site-header" data-elevate>
-    <div class="container header-inner">
-      <nav class="site-nav" aria-label="Primary">
-        <a class="nav-link" data-zone="hero" href="#hero">Me</a>
-        <a class="nav-link" data-zone="projects" href="#projects">Projects</a>
-        <a class="nav-link" data-zone="work" href="#work">Work</a>
-        <a class="nav-link" data-zone="explore" href="#explore">Explore</a>
-        <a class="nav-link" data-zone="contact" href="#contact">Contact</a>
-      </nav>
-
-      <div class="header-cta">
-        <a class="button button-ghost" href="/blog">Blog</a>
-        <a class="button button-primary" href="Tristan Grubbs Resume.pdf" target="_blank" rel="noopener">Resume</a>
-        <a class="button button-ghost" href="#contact">Contact</a>
-      </div>
-
-      <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false" type="button">
-        <span></span><span></span><span></span>
-      </button>
+  <!-- HEADER -->
+  <header class="doc-head">
+    <div class="name serif">
+      Tristan C. Grubbs
+      <small>Charlottesville, Virginia</small>
     </div>
-
-    <div class="mobile-nav" id="mobileNav" aria-hidden="true">
-      <div class="container mobile-nav-inner">
-        <a class="mobile-link" href="#hero">Me</a>
-        <a class="mobile-link" href="#projects">Projects</a>
-        <a class="mobile-link" href="#work">Work</a>
-        <a class="mobile-link" href="#explore">Explore</a>
-        <a class="mobile-link" href="#contact">Contact</a>
-        <a class="mobile-link" href="/blog">Blog</a>
-        <a class="mobile-link" href="Tristan Grubbs Resume.pdf" target="_blank" rel="noopener">Resume</a>
-      </div>
+    <nav class="doc-nav">
+      <a href="#opening">Opening</a>
+      <a href="#work">Selected Work</a>
+      <a href="#background">Background</a>
+      <a href="writing/">Writing</a>
+      <a href="#touch">In Touch</a>
+    </nav>
+    <div class="doc-meta">
+      Updated May 2026<br/>
+      Personal portfolio
     </div>
   </header>
 
-  <main id="top">
-    <section class="section hero" id="hero">
-      <div class="container">
-        <div class="grid-12 hero-grid">
-          <div class="hero-copy reveal">
-            <p class="kicker">Open to full-time opportunities</p>
-            <h1>Tristan C. Grubbs</h1>
-            <p class="hero-lead">
-              Graduating Computer Science student (May 2026) at the University of Virginia with hands-on experience at Naval Information Warfare Center.
-              I build dashboards, automate workflows, and create systems that drive data-informed decisions for leadership.
-            </p>
-            <div class="hero-actions">
-              <a class="button button-primary" href="#projects">View Projects</a>
-              <a class="button button-ghost" href="#explore">Explore</a>
-              <a class="button button-ghost" href="mailto:tristancgrubbs@gmail.com">Email</a>
-            </div>
-            <div class="hero-facts">
-              <div>
-                <p class="fact-label">Focus</p>
-                <p>AI + Data Analysis</p>
-              </div>
-              <div>
-                <p class="fact-label">Toolbelt</p>
-                <p>SQL, Power BI, Python, Excel, Git, AI tools</p>
-              </div>
-              <div>
-                <p class="fact-label">Location</p>
-                <p>Virginia</p>
-              </div>
-            </div>
-          </div>
-
-          <aside class="hero-portal reveal" aria-label="Glass Constellation Map">
-            <canvas id="portalCanvas" aria-hidden="true"></canvas>
-          </aside>
-        </div>
-      </div>
-    </section>
-
-
-    <section class="section" id="projects">
-      <div class="container">
-        <div class="section-head reveal">
-          <h2>Featured Projects</h2>
-        </div>
-        <div class="feature-grid" id="featuredProjectsGrid" aria-live="polite"></div>
-      </div>
-    </section>
-
-    <section class="section" id="work">
-      <div class="container">
-        <div class="section-head reveal">
-          <h2>Experience</h2>
-        </div>
-        <div class="experience-grid" id="experienceGrid" aria-live="polite"></div>
-      </div>
-    </section>
-
-    <section class="section" id="explore">
-      <div class="container">
-        <div class="section-head reveal">
-          <h2>Writing, Games</h2>
-        </div>
-
-        <div class="explore-shell reveal">
-          <div class="explore-controls">
-            <div class="segmented" role="tablist" aria-label="Explore content tabs">
-              <button class="segment is-active" data-tab="writing" data-zone="explore" role="tab" aria-selected="true" type="button">Writing</button>
-              <button class="segment" data-tab="games" data-zone="explore" role="tab" aria-selected="false" type="button">Games</button>
-            </div>
-            <a class="button button-ghost explore-viewall" href="#" id="exploreViewAll">View all</a>
-          </div>
-          <div class="explore-grid" id="exploreGrid"></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="contact">
-      <div class="container">
-        <div class="contact-grid reveal">
-          <div>
-            <h2>Let's connect</h2>
-            <p class="lead">Looking for analyst, consulting, or data-focused roles. Reach out by email or LinkedIn.</p>
-            <div class="contact-actions">
-              <a class="button button-primary" href="mailto:tristancgrubbs@gmail.com">Email</a>
-              <a class="button button-ghost" href="https://www.linkedin.com/in/tristan-grubbs" target="_blank" rel="noopener">LinkedIn</a>
-              <button class="button button-ghost" id="resumeBtn" type="button">Resume</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="quote-panel reveal" id="dailyQuote">
-          <p class="quote-text" id="quoteText"></p>
-          <p class="quote-author" id="quoteAuthor"></p>
-        </div>
-
-        <footer class="site-footer">
-          <p class="small">© <span id="year"></span> Tristan Grubbs</p>
-          <a class="small-link" href="#top">Back to top</a>
-        </footer>
-      </div>
-    </section>
-  </main>
-
-  <aside class="drawer" id="exploreDrawer" aria-hidden="true" aria-labelledby="drawerTitle" role="dialog">
-    <div class="drawer-backdrop" id="drawerBackdrop"></div>
-    <div class="drawer-panel">
-      <div class="drawer-head">
-        <p class="card-tag" id="drawerTag">Details</p>
-        <button class="drawer-close" id="drawerClose" type="button" aria-label="Close details">Close</button>
-      </div>
-      <h3 id="drawerTitle">Item</h3>
-      <p id="drawerDescription"></p>
-      <ul id="drawerBullets"></ul>
-      <div class="drawer-actions" id="drawerActions"></div>
+  <!-- TITLE BLOCK -->
+  <section class="title-block">
+    <div>
+      <h1 class="title">Welcome to My Portfolio.</h1>
+      <p class="deck">Graduate of the University of Virginia School of Engineering and Applied Science majoring in Computer Science. After two summers gaining experience as an intern at the Naval Information Warfare Center I have decided to continue to work there to gain more experience in leadership, analytics, and data-driven decision making. Outside of work I run aidecodedbrief.com to keep myself up-to-date with the rapidly changing world of AI and I build projects to further my education.</p>
     </div>
-  </aside>
+    <nav class="toc">
+      <div class="toc-h">Contents</div>
+      <a href="#opening"><span>01 — Opening</span><span>1</span></a>
+      <a href="#work"><span>02 — Selected Work</span><span>2</span></a>
+      <a href="#background"><span>03 — Background</span><span>5</span></a>
+      <a href="writing/"><span>04 — Writing</span><span>7</span></a>
+      <a href="#touch"><span>05 — In Touch</span><span>8</span></a>
+    </nav>
+  </section>
 
-  <div class="modal" id="resumeModal" aria-hidden="true">
-    <div class="modal-backdrop" id="modalBackdrop"></div>
-    <div class="modal-content">
-      <div class="modal-head">
-        <h3>Resume</h3>
-        <button class="drawer-close" id="modalClose" type="button" aria-label="Close resume">Close</button>
+  <!-- OPENING -->
+  <section class="sec" id="opening">
+    <header class="sec-head">
+      <div class="sec-num">01</div>
+      <h2 class="sec-title">Opening.</h2>
+      <div class="sec-meta">A short note</div>
+    </header>
+
+    <div class="opener">
+      <div class="opener-body">
+        <p>I picked computer science because I wanted to learn the language of communication in the world of technology. Through the education received I have been able to build analytical surfaces and automation tools during my internship experiences. On top of this I have been equipped to solve problems and build solutions in my own life. However, my favorite part of learning how to build solutions has been the experiences where I sit with people diagnosing their problems and outlining a strategic approach.</p>
       </div>
-      <iframe src="" id="resumeFrame" class="modal-frame" title="Resume PDF"></iframe>
+      <aside class="opener-aside">
+        <div class="a-h">At a glance</div>
+        <dl>
+          <dt>Now</dt>
+          <dd>Scientist<br/><em>Naval Information Warfare Center</em></dd>
+          <dt>Education</dt>
+          <dd>B.S. Computer Science, UVA</dd>
+          <dt>Interested in</dt>
+          <dd>Analytics, strategy, consulting<br/><em>Eventually, graduate study in business</em></dd>
+          <dt>Tools</dt>
+          <dd>Power BI · Claude API · Agents<br/><em>System Design · Prompt Engineering</em></dd>
+        </dl>
+      </aside>
     </div>
-  </div>
+  </section>
 
-  <script src="script.js"></script>
+  <!-- SELECTED WORK -->
+  <section class="sec" id="work">
+    <header class="sec-head">
+      <div class="sec-num">02</div>
+      <h2 class="sec-title">Selected work.</h2>
+      <div class="sec-meta">Five projects</div>
+    </header>
+
+    <!-- ScamShield -->
+    <article class="project">
+      <div class="p-index">
+        2026
+        <strong>i.</strong>
+      </div>
+      <div class="p-body">
+        <h3>ScamShield &mdash; a device that intercepts phone scams in real time to protect older adults.</h3>
+        <p class="p-meta">HooHacks 2026 &nbsp;·&nbsp; Team of three &nbsp;·&nbsp; <span class="role">Role: Product Manager</span></p>
+        <p>Our device listens to a phone call, transcribes it with Whisper, and scores the transcript through Gemini for scam patterns. On a positive signal, an LED activates, an SMS is sent to a family member, and a calm warning plays through a Google Nest speaker. Offline, the system uses keyword detection as a backup to ensure network loss does not silence alerts.</p>
+        <p>I led the team as PM: scoped the problem, divided work across two engineers and myself, and managed product requirements against a tight timeline. The hardest decisions were the features we agreed not to ship.</p>
+        <a class="p-link" href="https://github.com/TristanGru/ScamShield" target="_blank" rel="noopener">View on GitHub →</a>
+      </div>
+      <aside class="p-aside">
+        <div class="row">
+          <div class="num">3<span style="font-size:.55em;vertical-align:.4em;">rd</span> / 220+</div>
+          <div class="cap">Placement at HooHacks 2026</div>
+        </div>
+        <div class="row">
+          <ul>
+            <li>Gemini detection + offline fallback</li>
+            <li>SMS, voice, and LED alert pipeline</li>
+            <li>Successfully demoed to judges</li>
+          </ul>
+        </div>
+      </aside>
+    </article>
+
+    <!-- AI Decoded -->
+    <article class="project">
+      <div class="p-index">
+        Ongoing
+        <strong>ii.</strong>
+      </div>
+      <div class="p-body">
+        <h3>AI Decoded &mdash; An AI newsletter covering a different topic each week.</h3>
+        <p class="p-meta">Web platform &nbsp;·&nbsp; Founder &amp; author &nbsp;·&nbsp; <span class="role">Ongoing</span></p>
+        <p>AI coverage is so oversaturated it can feel impossible to stay up-to-date. The reader I have in mind is someone in a non-technical field who just wants to stay knowledgeable about how the world and jobs around them are being affected by AI. I hope AI Decoded can provide that on a weekly basis.</p>
+        <a class="p-link" href="https://aidecodedbrief.com/" target="_blank" rel="noopener">Visit aidecodedbrief.com →</a>
+      </div>
+      <aside class="p-aside">
+        <div class="row">
+          <ul>
+            <li>Weekly briefings: business, models, tools, regulation</li>
+            <li>Structured platform for recurring publishing</li>
+            <li>Written to a non-technical audience</li>
+          </ul>
+        </div>
+      </aside>
+    </article>
+
+    <!-- Macro Map -->
+    <article class="project">
+      <div class="p-index">
+        2026
+        <strong>iii.</strong>
+      </div>
+      <div class="p-body">
+        <h3>Macro Map &mdash; a live globe modeling global commodity trade routes and supply chain risk.</h3>
+        <p class="p-meta">Solo build &nbsp;·&nbsp; <span class="role">Live at macromapglobal.com</span></p>
+        <p>An interactive 3D globe that maps trade flows for oil, gas, grain, shipping, and eight other commodities. Chokepoints like the Strait of Hormuz and Suez Canal are monitored continuously and are color-coded by status: normal, stressed, or disrupted. Conflict events, storms, and earthquakes surface as map overlays so a single view tells you where trade pressure is.</p>
+        <a class="p-link" href="https://macromapglobal.com" target="_blank" rel="noopener">Visit macromapglobal.com →</a>
+      </div>
+      <aside class="p-aside">
+        <div class="row">
+          <ul>
+            <li>Routes across 14 commodities</li>
+            <li>Real-time chokepoint &amp; event monitoring</li>
+            <li>Macro signals: CPI, PPI, energy, agriculture</li>
+          </ul>
+        </div>
+      </aside>
+    </article>
+
+    <!-- Compact entries -->
+    <div class="work-more">
+      <p class="work-more-h">Also on file</p>
+
+      <article class="project-mini">
+        <div class="pm-index">2024 <strong>iv.</strong></div>
+        <div class="pm-body">
+          <h3>Game Library &mdash; a full-stack catalog for a fictional library.</h3>
+          <p>Django + SQL with full CRUD, schema design, and the database that holds it all together. UVA coursework.</p>
+        </div>
+        <div class="pm-takeaway">
+          <div class="lbl">Takeaway</div>
+          <p>The first project where I got full-stack website creation experience.</p>
+        </div>
+      </article>
+
+      <article class="project-mini">
+        <div class="pm-index">2025<br><strong>v.</strong></div>
+        <div class="pm-body">
+          <h3>Capstone Project: UVA Club Hub &mdash; a single ecosystem to meet needs currently being met by Instagram, Discord, and GroupMe.</h3>
+          <p>React + Firebase directory and announcement layer for UVA campus life. Real-time search, join flows, and broadcast announcements. We built this to replace the scattered mix of Instagram, Discord, and GroupMe that clubs were using to reach members and keep them updated on club matters.</p>
+        </div>
+        <div class="pm-takeaway">
+          <div class="lbl">Takeaway</div>
+          <p>Stakeholders tend to explain how their process is struggling, but root cause analysis tells you why. The goal is to build for the why, not the symptoms.</p>
+        </div>
+      </article>
+
+      <article class="project-mini">
+        <div class="pm-index">2026 <strong>vi.</strong></div>
+        <div class="pm-body">
+          <h3>Career Conductor &mdash; a career navigation platform with AI woven into every aspect.</h3>
+          <p>Users build a profile, set and track milestones, and receive a Living Document continuously updated by AI. A flexible notes system lets users define their own page structure. A chat interface connects to Claude Sonnet 4.6 with full user context injected so the model can answer questions about that exact user's situation.</p>
+        </div>
+        <div class="pm-takeaway">
+          <div class="lbl">Takeaway</div>
+          <p>AI is most useful when it has context, but that's also the hardest part to manage. Injecting the right information at the right time is when an AI system is at its best.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- BACKGROUND -->
+  <section class="sec" id="background">
+    <header class="sec-head">
+      <div class="sec-num">03</div>
+      <h2 class="sec-title">Background.</h2>
+      <div class="sec-meta">Naval Information Warfare Center · 2024 — present</div>
+    </header>
+
+    <table class="bg-table">
+      <thead>
+        <tr>
+          <th style="width: 160px;">Period</th>
+          <th style="width: 280px;">Role</th>
+          <th>What it produced</th>
+          <th style="width: 180px;">Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="bg-period">
+            Summer 2025
+            <em>Engagement 01</em>
+          </td>
+          <td>
+            <div class="bg-role">Interactive Power BI dashboard for leadership.</div>
+            <div class="bg-org">NIWC · Data Analysis</div>
+          </td>
+          <td class="bg-finding">
+            Consolidated eleven fragmented datasets into a single interactive dashboard for leadership. The visualizations were designed to surface data that was once scattered across multiple domains and built for the leadership making critical decisions.
+          </td>
+          <td>
+            <div class="bg-stat">
+              11 → 1
+              <em>Data sources consolidated across multiple domains</em>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="bg-period">
+            Summer 2024
+            <em>Engagement 02</em>
+          </td>
+          <td>
+            <div class="bg-role">Power Apps automation, account-management workflow.</div>
+            <div class="bg-org">NIWC · Process Automation</div>
+          </td>
+          <td class="bg-finding">
+            Identified a recurring manual process eating work hours and producing possible error, then scoped a solution and designed a Power Apps replacement built to scale across a large government organization. Designed, documented, and handed off.
+          </td>
+          <td>
+            <div class="bg-stat">
+              7 accounts
+              <em>Designed &amp; built for</em>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="bg-period">
+            Summer 2024 &amp; 2025
+            <em>Engagement 03</em>
+          </td>
+          <td>
+            <div class="bg-role">Documentation &amp; testing, secure communications system.</div>
+            <div class="bg-org">NIWC · Documentation &amp; QA</div>
+          </td>
+          <td class="bg-finding">
+            Researched and identified relevant data points to support documentation of a communications system, with a focus on surfacing the information most useful to leadership making decisions under real operating conditions.
+          </td>
+          <td>
+            <div class="bg-stat">
+              2 systems
+              <em>Tested &amp; documented</em>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- WRITING -->
+  <section class="sec" id="writing">
+    <header class="sec-head">
+      <div class="sec-num">04</div>
+      <h2 class="sec-title">Writing.</h2>
+      <div class="sec-meta">Two long-form, on file</div>
+    </header>
+
+    <div class="papers">
+      <article class="paper">
+        <div class="pp-tag">Final Research Paper · 2026</div>
+        <h3>First-Generation Participation in Professional Organizations at Higher Education Institutions: A Qualitative Research Study Using Social Capital and Bioecological Systems.</h3>
+        <p>Argues that institutional opportunity structures, not individual choice, are the primary driver of inequity in first-generation students' access to professional and career-oriented organizations. Based on semi-structured interviews with first-generation UVA students, analyzed through Bronfenbrenner's bioecological systems theory and Putnam's social capital framework. Finding: awareness shapes access, access shapes engagement, and the institutional exosystem controls all three.</p>
+        <div class="pp-meta">
+          <span>15 pages, completed</span>
+          <a class="pp-read" href="STS Research Paper-Grubbs-3.pdf" target="_blank" rel="noopener">Read paper →</a>
+        </div>
+      </article>
+      <article class="paper">
+        <div class="pp-tag">Applied AI Research · 2025</div>
+        <h3>ESG and Public Sentiment Analysis for Predicting Short-Term Stock Movement.</h3>
+        <p>FinBERT sentiment fed into Logistic Regression and XGBoost classifiers to test whether ESG signal in financial news can predict next-day stock movement. Findings: the approach is limited in predicting short-term movement but may be helpful in longer-term prediction.</p>
+        <div class="pp-meta">
+          <span>Final project report</span>
+          <a class="pp-read" href="Final Project Report.pdf" target="_blank" rel="noopener">Read paper →</a>
+        </div>
+      </article>
+    </div>
+
+    <div class="writing-more">
+      <a class="wm-card" href="writing/">
+        <div class="wm-tag">The archive</div>
+        <div class="wm-title">Other writing: essays, course papers, and short pieces.</div>
+        <div class="wm-meta">Browse the writing index <span>→</span></div>
+      </a>
+      <a class="wm-card" href="blog/">
+        <div class="wm-tag">The blog</div>
+        <div class="wm-title">Short-form notes on business, AI, technology, and the market.</div>
+        <div class="wm-meta">Latest: Lego's record growth and adult audiences <span>→</span></div>
+      </a>
+    </div>
+  </section>
+
+  <!-- IN TOUCH -->
+  <section class="touch" id="touch">
+    <p class="touch-num">05 — In touch</p>
+    <h2 class="touch-title">Feel free to reach out.</h2>
+    <p class="touch-body">
+      If anything here resonates, or you'd be willing to share twenty minutes about work, business school, or the road from technology to business, I would be grateful to hear from you.
+    </p>
+
+    <div class="touch-grid">
+      <div class="touch-contact">
+        <p class="k">Email</p>
+        <a class="v" href="mailto:tristancgrubbs@gmail.com">tristancgrubbs@gmail.com</a>
+      </div>
+      <div class="touch-contact">
+        <p class="k">LinkedIn</p>
+        <a class="v" href="https://www.linkedin.com/in/tristan-grubbs" target="_blank" rel="noopener">/in/tristan-grubbs</a>
+      </div>
+      <div class="touch-contact">
+        <p class="k">Résumé</p>
+        <a class="v" href="Tristan_Grubbs_Resume.pdf" target="_blank" rel="noopener">PDF, updated May 2026</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <div>Tristan C. Grubbs</div>
+    <div>Charlottesville, Virginia · MMXXVI</div>
+  </footer>
+
+</div>
 </body>
 </html>
-
-
-
